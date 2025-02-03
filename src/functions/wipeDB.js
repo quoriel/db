@@ -1,6 +1,6 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
-const { wipe } = require('../db');
-const { enums } = require('../config');
+const { wipe } = require("../db");
+const { enums } = require("../config");
 
 exports.default = new NativeFunction({
     name: "$wipeDB",
