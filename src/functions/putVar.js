@@ -1,6 +1,6 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
-const { put } = require('../db');
-const { enums, types } = require('../config');
+const { put } = require("../db");
+const { enums, types } = require("../config");
 
 exports.default = new NativeFunction({
     name: "$putVar",
