@@ -1,5 +1,5 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
-const { close, active } = require('../db');
+const { close, active } = require("../db");
 
 exports.default = new NativeFunction({
     name: "$closeAllDB",
