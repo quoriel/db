@@ -1,6 +1,6 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
-const { open } = require('../db');
-const { enums } = require('../config');
+const { open } = require("../db");
+const { enums } = require("../config");
 
 exports.default = new NativeFunction({
     name: "$openDB",
