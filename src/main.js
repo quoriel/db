@@ -1,5 +1,5 @@
-const { ForgeExtension } = require('@tryforge/forgescript');
-const { update } = require('./db');
+const { ForgeExtension } = require("@tryforge/forgescript");
+const { update } = require("./db");
 
 class QuorielDB extends ForgeExtension {
     name = "QuorielDB";
@@ -8,7 +8,7 @@ class QuorielDB extends ForgeExtension {
 
     init() {
         update();
-        this.load(__dirname + '/functions');
+        this.load(__dirname + "/functions");
     }
 }
 
