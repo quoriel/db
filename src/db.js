@@ -1,7 +1,7 @@
 const { join, resolve } = require("path");
-const { existsSync } = require('fs');
+const { existsSync } = require("fs");
 const { mkdir, writeFile, readFile, rm } = require("fs").promises;
-const { performance } = require('perf_hooks');
+const { performance } = require("perf_hooks");
 const { types } = require("./config");
 const path = resolve(process.cwd(), "quoriel/db");
 const dbs = new Map();
@@ -120,10 +120,10 @@ async function ping(type) {
     if (!dbs.has(type)) return -1;
     const start = performance.now();
     try {
-        await (await dbs.get(type)).get(start);
+        await (await dbs.get(type)).get("PING");
         return (performance.now() - start + 0.5) | 0;
     } catch (error) {
-        return error.name === 'NotFoundError' ? (performance.now() - start + 0.5) | 0 : -1;
+        return error.name === "NotFoundError" ? (performance.now() - start + 0.5) | 0 : -1;
     }
 }
 
