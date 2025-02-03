@@ -1,2 +1,2 @@
-const { generateMetadata } = require('@tryforge/forgescript');
-generateMetadata(`${__dirname}/functions`, 'functions');
+const { generateMetadata } = require("@tryforge/forgescript");
+generateMetadata(`${__dirname}/functions`, "functions");
