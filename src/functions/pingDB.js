@@ -1,6 +1,6 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
-const { ping } = require('../db');
-const { enums } = require('../config');
+const { ping } = require("../db");
+const { enums } = require("../config");
 
 exports.default = new NativeFunction({
     name: "$pingDB",
