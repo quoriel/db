@@ -120,10 +120,10 @@ async function ping(type) {
     if (!dbs.has(type)) return -1;
     const start = performance.now();
     try {
-        await dbs.get(type).get(start);
+        await (await dbs.get(type)).get(start);
         return (performance.now() - start + 0.5) | 0;
-    } catch {
-        return -1;
+    } catch (error) {
+        return error.name === 'NotFoundError' ? (performance.now() - start + 0.5) | 0 : -1;
     }
 }
 
