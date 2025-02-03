@@ -110,14 +110,10 @@ async function del(type, name, id) {
 
 async function toggle(type, name, id) {
     if (!dbs.has(type)) return false;
-    try {
-        const current = await get(type, name, id);
-        const value = current === "true" ? "false" : "true";
-        await put(type, name, value, id);
-        return value;
-    } catch {
-        return false;
-    }
+    const current = await get(type, name, id);
+    const value = current === "true" ? "false" : "true";
+    await put(type, name, value, id);
+    return value;
 }
 
 async function ping(type) {
