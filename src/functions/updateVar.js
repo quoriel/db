@@ -1,5 +1,5 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
-const { update } = require('../db');
+const { update } = require("../db");
 
 exports.default = new NativeFunction({
     name: "$updateVar",
