@@ -1,5 +1,5 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
-const { active } = require('../db');
+const { active } = require("../db");
 
 exports.default = new NativeFunction({
     name: "$activeDB",
@@ -17,6 +17,6 @@ exports.default = new NativeFunction({
         }
     ],
     execute(ctx, [separator]) {
-        return this.success(active().join(separator || ', '));
+        return this.success(active().join(separator || ", "));
     }
 });
