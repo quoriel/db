@@ -1,6 +1,6 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
-const { del } = require('../db');
-const { enums, types } = require('../config');
+const { del } = require("../db");
+const { enums, types } = require("../config");
 
 exports.default = new NativeFunction({
     name: "$delVar",
