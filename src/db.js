@@ -4,6 +4,7 @@ const { mkdir, writeFile, readFile, rm } = require("fs").promises;
 const { performance } = require("perf_hooks");
 const { types } = require("./config");
 const path = resolve(process.cwd(), "quoriel/db");
+const cache = new Map();
 const dbs = new Map();
 let variables = {};
 
@@ -141,5 +142,6 @@ module.exports = {
     del,
     toggle,
     ping,
-    active
+    active,
+    cache
 };
