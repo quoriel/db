@@ -5,7 +5,6 @@ exports.default = new NativeFunction({
     name: "$delCache",
     version: "1.0.0",
     description: "...",
-    output: ArgType.Unknown,
     brackets: true,
     unwrap: true,
     args: [
