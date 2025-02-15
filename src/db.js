@@ -116,7 +116,7 @@ async function del(type, name, id) {
             if (!types[type].json) return await tx.remove(key);
             const current = await tx.get(key);
             if (!current) return true;
-            const data = current ? JSON.parse(current) : {};
+            const data = JSON.parse(current);
             delete data[name];
             Object.keys(data).length ? await tx.put(key, JSON.stringify(data)) : await tx.remove(key);
         });
