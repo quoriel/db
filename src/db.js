@@ -94,15 +94,16 @@ async function put(type, name, value, id) {
     if (!db) return false;
     const key = id || name;
     try {
-        await db.transaction(async tx => {
-            if (!types[type].json) return value ? await tx.put(key, value) : await tx.remove(key);
-            const current = await tx.get(key);
+        await db.transaction(async () => {
+            if (!types[type].json) return value ? await db.put(key, value) : await db.remove(key);
+            const current = await db.get(key);
             const data = current ? JSON.parse(current) : {};
             value ? data[name] = value : delete data[name];
-            Object.keys(data).length ? await tx.put(key, JSON.stringify(data)) : await tx.remove(key);
+            Object.keys(data).length ? await db.put(key, JSON.stringify(data)) : await db.remove(key);
         });
         return true;
-    } catch {
+    } catch (error) {
+        console.log(error)
         return false;
     }
 }
@@ -112,13 +113,13 @@ async function del(type, name, id) {
     if (!db) return false;
     const key = id || name;
     try {
-        await db.transaction(async tx => {
-            if (!types[type].json) return await tx.remove(key);
-            const current = await tx.get(key);
+        await db.transaction(async () => {
+            if (!types[type].json) return await db.remove(key);
+            const current = await db.get(key);
             if (!current) return true;
             const data = JSON.parse(current);
             delete data[name];
-            Object.keys(data).length ? await tx.put(key, JSON.stringify(data)) : await tx.remove(key);
+            Object.keys(data).length ? await db.put(key, JSON.stringify(data)) : await db.remove(key);
         });
         return true;
     } catch {
