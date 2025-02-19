@@ -14,7 +14,7 @@ exports.default = new NativeFunction({
             name: "type",
             description: "Тип переменной",
             type: ArgType.Enum,
-            enum: enums,
+            enum: enums.type,
             required: true,
             rest: false
         }

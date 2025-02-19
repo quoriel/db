@@ -2,7 +2,7 @@ const { join, resolve } = require("path");
 const { existsSync } = require("fs");
 const { mkdir, writeFile, readFile, rm } = require("fs").promises;
 const { performance } = require("perf_hooks");
-const { types } = require("./config");
+const { types, separator } = require("./config");
 const path = resolve(process.cwd(), "quoriel/db");
 const cache = new Map();
 const dbs = new Map();
@@ -68,10 +68,11 @@ async function wipe(type) {
 async function inspect(type) {
     const db = dbs.get(type);
     if (!db) return "[]";
-    const parse = types[type].json;
+    const is = types[type].json;
     try {
-        return JSON.stringify(Array.from(await db.getRange(), ({ key, value }) => ({
-            key, value: parse ? JSON.parse(value) : value
+        const entries = await db.getRange();
+        return JSON.stringify(Array.from(entries, ({ key, value }) => ({
+            key, value: is ? JSON.parse(value) : value
         })));
     } catch {
         return "[]";
@@ -147,6 +148,36 @@ async function ping(type) {
     }
 }
 
+async function entry(type, name, order, guild) {
+    const db = dbs.get(type);
+    if (!db) return;
+    let entries;
+    try {
+        entries = await db.getRange();
+    } catch {
+        return;
+    }
+    const is = types[type].guild;
+    const ranked = [];
+    let length = 0;
+    for (const { key, value } of entries) {
+        const [entityId, guildId] = key.split(separator);
+        if (is && guildId !== guild) continue;
+        let parsed;
+        try {
+            parsed = JSON.parse(value)[name];
+        } catch {
+            continue;
+        }
+        if (!isNaN(parsed)) {
+            ranked.push({ entity: entityId, guild: guildId, value: parsed });
+            length++;
+        }
+    }
+    ranked.sort((a, b) => order === "asc" ? a.value - b.value : b.value - a.value);
+    return { ranked, length };
+}
+
 function active() {
     return Array.from(dbs.keys());
 }
@@ -162,6 +193,7 @@ module.exports = {
     del,
     toggle,
     ping,
+    entry,
     active,
     cache
 };

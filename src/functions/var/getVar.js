@@ -1,5 +1,5 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
-const { enums, types } = require("../../config");
+const { enums, types, separator } = require("../../config");
 const { get } = require("../../db");
 
 exports.default = new NativeFunction({
@@ -14,7 +14,7 @@ exports.default = new NativeFunction({
             name: "type",
             description: "Тип переменной",
             type: ArgType.Enum,
-            enum: enums,
+            enum: enums.type,
             required: true,
             rest: false
         },
@@ -26,7 +26,7 @@ exports.default = new NativeFunction({
             rest: false
         },
         {
-            name: "id",
+            name: "entity",
             description: "Идентификатор сущности",
             type: ArgType.String,
             rest: false
@@ -38,12 +38,12 @@ exports.default = new NativeFunction({
             rest: false
         }
     ],
-    async execute(ctx, [type, name, id, guild]) {
+    async execute(ctx, [type, name, entity, guild]) {
         if (!types[type].json) return this.success(await get(type, name));
         const tupe = types[type].type;
-        if (tupe === null && !id) return this.stop();
-        let key = id || ctx[tupe]?.id;
-        if (types[tupe].guild) key = `${key}-${guild?.id || ctx.guild.id}`;
-        return this.success(await get(type, name, key));
+        if (tupe === null) return this.stop();
+        let id = entity || ctx[tupe]?.id;
+        if (types[tupe].guild) id = `${id}${separator}${guild?.id || ctx.guild.id}`;
+        return this.success(await get(type, name, id));
     }
 });

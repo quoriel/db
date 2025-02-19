@@ -1,12 +1,24 @@
 module.exports = {
+    separator: "-",
     enums: {
-        global: "global",
-        user: "user",
-        guild: "guild",
-        member: "member",
-        channel: "channel",
-        role: "role",
-        message: "message"
+        type: {
+            global: "global",
+            user: "user",
+            guild: "guild",
+            member: "member",
+            channel: "channel",
+            role: "role",
+            message: "message"
+        },
+        sorting: {
+            asc: "asc",
+            desc: "desc"
+        },
+        result: {
+            entity: "entity",
+            guild: "guild",
+            value: "value"
+        }
     },
     types: {
         global: {

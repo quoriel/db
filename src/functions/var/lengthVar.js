@@ -1,12 +1,12 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
-const { enums, types, separator } = require("../../config");
-const { toggle } = require("../../db");
+const { enums, types } = require("../../config");
+const { entry } = require("../../db");
 
 exports.default = new NativeFunction({
-    name: "$toggleVar",
+    name: "$lengthVar",
     version: "1.0.0",
-    description: "Переключает значение переменной: если было true, станет false, и наоборот",
-    output: ArgType.Boolean,
+    description: "...",
+    output: ArgType.Number,
     brackets: true,
     unwrap: true,
     args: [
@@ -26,9 +26,10 @@ exports.default = new NativeFunction({
             rest: false
         },
         {
-            name: "entity",
-            description: "Идентификатор сущности",
-            type: ArgType.String,
+            name: "sorting",
+            description: "Тип сортировки",
+            type: ArgType.Enum,
+            enum: enums.sorting,
             rest: false
         },
         {
@@ -38,12 +39,9 @@ exports.default = new NativeFunction({
             rest: false
         }
     ],
-    async execute(ctx, [type, name, entity, guild]) {
-        if (!types[type].json) return this.success(await toggle(type, name));
-        const tupe = types[type].type;
-        if (tupe === null) return this.stop();
-        let id = entity || ctx[tupe]?.id;
-        if (types[tupe].guild) id = `${id}${separator}${guild?.id || ctx.guild.id}`;
-        return this.success(await toggle(type, name, id));
+    async execute(ctx, [type, name, sorting, guild]) {
+    	if (!types[type].json) return this.success();
+        const data = await entry(type, name, sorting, guild?.id || ctx.guild.id);
+        return this.success(data.length);
     }
 });
