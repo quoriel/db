@@ -52,6 +52,6 @@ exports.default = new NativeFunction({
         entity = entity || ctx[tupe]?.id;
         const data = await entry(type, name, sorting, guild?.id || ctx.guild.id);
         const index = data.ranked.findIndex(item => item.entity === entity);
-        return this.success(index === -1 ? 0 : index + 1);
+        return this.success(index + 1);
     }
 });
