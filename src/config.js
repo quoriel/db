@@ -16,7 +16,6 @@ module.exports = {
         },
         result: {
             entity: "entity",
-            guild: "guild",
             value: "value"
         }
     },
