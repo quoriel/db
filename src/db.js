@@ -148,7 +148,7 @@ async function ping(type) {
     }
 }
 
-async function entry(type, name, order, guild) {
+async function entry(type, name, sorting, guild) {
     const db = dbs.get(type);
     if (!db) return;
     let entries;
@@ -170,11 +170,11 @@ async function entry(type, name, order, guild) {
             continue;
         }
         if (!isNaN(parsed)) {
-            ranked.push({ entity: entityId, guild: guildId, value: parsed });
+            ranked.push({ entity: entityId, value: parsed });
             length++;
         }
     }
-    ranked.sort((a, b) => order === "asc" ? a.value - b.value : b.value - a.value);
+    ranked.sort((a, b) => sorting === "asc" ? a.value - b.value : b.value - a.value);
     return { ranked, length };
 }
 
