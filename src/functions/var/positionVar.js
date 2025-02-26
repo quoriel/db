@@ -49,7 +49,7 @@ exports.default = new NativeFunction({
     	if (!types[type].json) return this.success();
         const tupe = types[type].type;
         if (tupe === null) return this.success();
-        entity = entity || ctx[tupe]?.id;
+        entity ||= ctx[tupe]?.id;
         const data = await entry(type, name, sorting, guild?.id || ctx.guild.id);
         const index = data.ranked.findIndex(item => item.entity === entity);
         return this.success(index + 1);
