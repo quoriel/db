@@ -42,8 +42,8 @@ exports.default = new NativeFunction({
         if (!types[type].json) return this.success(await get(type, name));
         const tupe = types[type].type;
         if (tupe === null) return this.stop();
-        let id = entity || ctx[tupe]?.id;
-        if (types[tupe].guild) id = `${id}${separator}${guild?.id || ctx.guild.id}`;
-        return this.success(await get(type, name, id));
+        entity ||= ctx[tupe]?.id;
+        if (types[tupe].guild) entity = entity + separator + (guild?.id || ctx.guild.id);
+        return this.success(await get(type, name, entity));
     }
 });
