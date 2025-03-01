@@ -79,21 +79,21 @@ async function inspect(type) {
     }
 }
 
-async function get(type, name, id) {
+async function get(type, name, entity) {
     const db = await dbs.get(type);
     if (!db) return variables[name];
     try {
-        const value = await db.get(id || name);
+        const value = await db.get(entity || name);
         return (types[type].json ? JSON.parse(value || "{}")?.[name] : value) || variables[name];
     } catch {
         return variables[name];
     }
 }
 
-async function put(type, name, value, id) {
+async function put(type, name, value, entity) {
     const db = await dbs.get(type);
     if (!db) return false;
-    const key = id || name;
+    const key = entity || name;
     try {
         await db.transaction(async () => {
             if (!types[type].json) return value ? await db.put(key, value) : await db.remove(key);
@@ -103,16 +103,15 @@ async function put(type, name, value, id) {
             Object.keys(data).length ? await db.put(key, JSON.stringify(data)) : await db.remove(key);
         });
         return true;
-    } catch (error) {
-        console.log(error)
+    } catch {
         return false;
     }
 }
 
-async function del(type, name, id) {
+async function del(type, name, entity) {
     const db = await dbs.get(type);
     if (!db) return false;
-    const key = id || name;
+    const key = entity || name;
     try {
         await db.transaction(async () => {
             if (!types[type].json) return await db.remove(key);
@@ -128,11 +127,11 @@ async function del(type, name, id) {
     }
 }
 
-async function toggle(type, name, id) {
+async function toggle(type, name, entity) {
     if (!dbs.has(type)) return false;
-    const current = await get(type, name, id);
+    const current = await get(type, name, entity);
     const value = current === "true" ? "false" : "true";
-    await put(type, name, value, id);
+    await put(type, name, value, entity);
     return value;
 }
 
