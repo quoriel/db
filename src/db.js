@@ -3,6 +3,7 @@ const { existsSync } = require("fs");
 const { mkdir, writeFile, readFile, rm } = require("fs").promises;
 const { performance } = require("perf_hooks");
 const { types, separator } = require("./config");
+const { open: create } = require("lmdb");
 const path = resolve(process.cwd(), "quoriel/db");
 const cache = new Map();
 const dbs = new Map();
@@ -12,7 +13,7 @@ function open(type) {
     if (dbs.has(type)) return true;
     const { open } = require("lmdb");
     try {
-        const db = open({
+        const db = create({
             path: join(path, type),
             noReadAhead: true,
             noMemInit: true,
