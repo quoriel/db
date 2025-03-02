@@ -115,6 +115,7 @@ async function del(type, name, entity) {
         const current = await db.get(key);
         if (!current) return true;
         const data = JSON.parse(current);
+        if (!(name in data)) return true;
         delete data[name];
         Object.keys(data).length ? await db.put(key, JSON.stringify(data)) : await db.remove(key);
         return true;
