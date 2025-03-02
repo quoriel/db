@@ -11,7 +11,6 @@ let variables = {};
 
 function open(type) {
     if (dbs.has(type)) return true;
-    const { open } = require("lmdb");
     try {
         const db = create({
             path: join(path, type),
@@ -96,13 +95,11 @@ async function put(type, name, value, entity) {
     if (!db) return false;
     const key = entity || name;
     try {
-        await db.transaction(async () => {
-            if (!types[type].json) return value ? await db.put(key, value) : await db.remove(key);
-            const current = await db.get(key);
-            const data = current ? JSON.parse(current) : {};
-            value ? data[name] = value : delete data[name];
-            Object.keys(data).length ? await db.put(key, JSON.stringify(data)) : await db.remove(key);
-        });
+        if (!types[type].json) return value ? await db.put(key, value) : await db.remove(key);
+        const current = await db.get(key);
+        const data = current ? JSON.parse(current) : {};
+        value ? data[name] = value : delete data[name];
+        Object.keys(data).length ? await db.put(key, JSON.stringify(data)) : await db.remove(key);
         return true;
     } catch {
         return false;
@@ -114,14 +111,12 @@ async function del(type, name, entity) {
     if (!db) return false;
     const key = entity || name;
     try {
-        await db.transaction(async () => {
-            if (!types[type].json) return await db.remove(key);
-            const current = await db.get(key);
-            if (!current) return true;
-            const data = JSON.parse(current);
-            delete data[name];
-            Object.keys(data).length ? await db.put(key, JSON.stringify(data)) : await db.remove(key);
-        });
+        if (!types[type].json) return await db.remove(key);
+        const current = await db.get(key);
+        if (!current) return true;
+        const data = JSON.parse(current);
+        delete data[name];
+        Object.keys(data).length ? await db.put(key, JSON.stringify(data)) : await db.remove(key);
         return true;
     } catch {
         return false;
