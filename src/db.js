@@ -3,28 +3,10 @@ const { existsSync } = require("fs");
 const { mkdir, writeFile, readFile, rm } = require("fs").promises;
 const { performance } = require("perf_hooks");
 const { types, separator } = require("./config");
-const { open: create } = require("lmdb");
 const path = resolve(process.cwd(), "quoriel/db");
 const cache = new Map();
 const dbs = new Map();
 let variables = {};
-
-function open(type) {
-    if (dbs.has(type)) return true;
-    try {
-        const db = create({
-            path: join(path, type),
-            noReadAhead: true,
-            noMemInit: true,
-            compression: true,
-            cache: true
-        });
-        dbs.set(type, db);
-        return true;
-    } catch {
-        return false;
-    }
-}
 
 async function close(type) {
     const db = dbs.get(type);
@@ -133,15 +115,11 @@ async function toggle(type, name, entity) {
 }
 
 async function ping(type) {
-    const db = await dbs.get(type);
+    const db = dbs.get(type);
     if (!db) return -1;
     const start = performance.now();
-    try {
-        await db.get("ping");
-        return (performance.now() - start + 0.5) | 0;
-    } catch (error) {
-        return error.name === 'NotFoundError' ? (performance.now() - start + 0.5) | 0 : -1;
-    }
+    await db.get("ping");
+    return Math.round(performance.now() - start);
 }
 
 async function entry(type, name, sorting, guild) {
@@ -179,7 +157,6 @@ function active() {
 }
 
 module.exports = {
-    open,
     close,
     update,
     wipe,
@@ -191,5 +168,6 @@ module.exports = {
     ping,
     entry,
     active,
-    cache
+    cache,
+    dbs
 };
