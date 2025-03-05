@@ -169,5 +169,6 @@ module.exports = {
     entry,
     active,
     cache,
-    dbs
+    dbs,
+    path
 };
