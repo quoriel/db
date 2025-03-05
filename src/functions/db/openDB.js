@@ -1,6 +1,8 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
+const { open } = require("lmdb");
 const { enums } = require("../../config");
-const { open } = require("../../db");
+const { dbs, path } = require("../../db");
+const { join } = require("path");
 
 exports.default = new NativeFunction({
     name: "$openDB",
@@ -20,6 +22,19 @@ exports.default = new NativeFunction({
         }
     ],
     execute(ctx, [type]) {
-        return this.success(open(type));
+        if (dbs.has(type)) return this.success("true");
+        try {
+            const db = open({
+                path: join(path, type),
+                noReadAhead: true,
+                noMemInit: true,
+                compression: true,
+                cache: true
+            });
+            dbs.set(type, db);
+            return this.success("true");
+        } catch {
+            return this.success("false");
+        }
     }
 });
