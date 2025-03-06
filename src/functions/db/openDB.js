@@ -1,7 +1,7 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
 const { open } = require("lmdb");
-const { enums } = require("../../config");
-const { dbs, path } = require("../../db");
+const { enums, path } = require("../../config");
+const { dbs } = require("../../db");
 const { join } = require("path");
 
 exports.default = new NativeFunction({
