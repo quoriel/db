@@ -113,14 +113,6 @@ async function toggle(type, name, entity) {
     return value;
 }
 
-async function ping(type) {
-    const db = dbs.get(type);
-    if (!db) return -1;
-    const start = performance.now();
-    await db.get("ping");
-    return Math.round(performance.now() - start);
-}
-
 async function entry(type, name, sorting, guild) {
     const db = dbs.get(type);
     if (!db) return;
@@ -164,9 +156,9 @@ module.exports = {
     put,
     del,
     toggle,
-    ping,
     entry,
     active,
     cache,
-    dbs
+    dbs,
+    variables
 };
