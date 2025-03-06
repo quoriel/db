@@ -1,6 +1,6 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
 const { enums } = require("../../config");
-const { ping } = require("../../db");
+const { dbs } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$pingDB",
@@ -20,6 +20,10 @@ exports.default = new NativeFunction({
         }
     ],
     async execute(ctx, [type]) {
-        return this.success(await ping(type));
+        const db = dbs.get(type);
+        if (!db) return this.success("-1");
+        const start = performance.now();
+        await db.get("ping");
+        return this.success(Math.round(performance.now() - start));
     }
 });
