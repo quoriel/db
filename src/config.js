@@ -1,4 +1,7 @@
+const { resolve } = require("path");
+
 module.exports = {
+    path: resolve(process.cwd(), "quoriel/db"),
     separator: "-",
     enums: {
         type: {
