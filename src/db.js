@@ -1,9 +1,8 @@
-const { join, resolve } = require("path");
+const { join } = require("path");
 const { existsSync } = require("fs");
 const { mkdir, writeFile, readFile, rm } = require("fs").promises;
 const { performance } = require("perf_hooks");
-const { types, separator } = require("./config");
-const path = resolve(process.cwd(), "quoriel/db");
+const { types, separator, path } = require("./config");
 const cache = new Map();
 const dbs = new Map();
 let variables = {};
@@ -169,6 +168,5 @@ module.exports = {
     entry,
     active,
     cache,
-    dbs,
-    path
+    dbs
 };
