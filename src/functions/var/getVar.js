@@ -1,6 +1,6 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
 const { enums, types, separator } = require("../../config");
-const { get } = require("../../db");
+const { dbs, variables } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$getVar",
@@ -47,3 +47,10 @@ exports.default = new NativeFunction({
         return this.success(await get(type, name, entity));
     }
 });
+
+async function get(type, name, entity) {
+    const db = await dbs.get(type);
+    if (!db) return variables[name];
+    const value = await db.get(entity || name);
+    return (types[type].json ? JSON.parse(value || "{}")?.[name] : value) || variables[name];
+}
