@@ -1,6 +1,9 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
-const { enums } = require("../../config");
-const { wipe } = require("../../db");
+const { existsSync } = require("fs");
+const { rm } = require("fs").promises;
+const { enums, path } = require("../../config");
+const { close } = require("../../db");
+const { join } = require("path");
 
 exports.default = new NativeFunction({
     name: "$wipeDB",
@@ -20,6 +23,15 @@ exports.default = new NativeFunction({
         }
     ],
     async execute(ctx, [type]) {
-        return this.success(await wipe(type));
+        const full = join(path, type);
+        await close(type);
+        try {
+            if (existsSync(full)) {
+                await rm(full, { recursive: true, force: true });
+            }
+            return this.success(true);
+        } catch {
+            return this.success(false);
+        }
     }
 });

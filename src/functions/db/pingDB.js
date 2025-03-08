@@ -1,11 +1,12 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
+const { performance } = require("perf_hooks");
 const { enums } = require("../../config");
 const { dbs } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$pingDB",
     version: "1.0.0",
-    description: "Проверяет время отклика от базы данных и выводит пинг",
+    description: "Проверяет время отклика от базы данных",
     output: ArgType.Number,
     brackets: true,
     unwrap: true,
@@ -23,7 +24,11 @@ exports.default = new NativeFunction({
         const db = dbs.get(type);
         if (!db) return this.success("-1");
         const start = performance.now();
-        await db.get("ping");
-        return this.success(Math.round(performance.now() - start));
+        try {
+            await db.get("ping");
+            return this.success(Math.round(performance.now() - start));
+        } catch {
+            return this.success("-1");
+        }
     }
 });

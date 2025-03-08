@@ -4,7 +4,7 @@ const { close, active } = require("../../db");
 exports.default = new NativeFunction({
     name: "$closeAllDB",
     version: "1.0.0",
-    description: "Закрывает все открытые базы данных в системе, освобождая ресурсы",
+    description: "Закрывает все соединения с базами данных",
     output: ArgType.Boolean,
     unwrap: true,
     async execute(ctx) {

@@ -5,7 +5,7 @@ const { entry } = require("../../db");
 exports.default = new NativeFunction({
     name: "$rankedVar",
     version: "1.0.0",
-    description: "...",
+    description: "Возвращает данные из ранжированного списка по указанной позиции",
     output: ArgType.Unknown,
     brackets: true,
     unwrap: true,

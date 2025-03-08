@@ -5,7 +5,7 @@ const { entry } = require("../../db");
 exports.default = new NativeFunction({
     name: "$positionVar",
     version: "1.0.0",
-    description: "...",
+    description: "Возвращает позицию указанной сущности в ранжированном списке",
     output: ArgType.Number,
     brackets: true,
     unwrap: true,

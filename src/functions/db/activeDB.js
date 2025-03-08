@@ -4,7 +4,7 @@ const { active } = require("../../db");
 exports.default = new NativeFunction({
     name: "$activeDB",
     version: "1.0.0",
-    description: "Отображает все активные базы данных, которые в данный момент открыты",
+    description: "Получение списка активных баз данных",
     output: ArgType.Unknown,
     brackets: false,
     unwrap: true,

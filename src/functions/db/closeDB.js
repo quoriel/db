@@ -5,7 +5,7 @@ const { close } = require("../../db");
 exports.default = new NativeFunction({
     name: "$closeDB",
     version: "1.0.0",
-    description: "Завершает указанное соединение с базой данных",
+    description: "Завершает соединение с базой данных",
     output: ArgType.Boolean,
     brackets: true,
     unwrap: true,

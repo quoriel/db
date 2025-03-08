@@ -1,7 +1,6 @@
 const { join } = require("path");
 const { existsSync } = require("fs");
-const { mkdir, writeFile, readFile, rm } = require("fs").promises;
-const { performance } = require("perf_hooks");
+const { mkdir, writeFile, readFile } = require("fs").promises;
 const { types, separator, path } = require("./config");
 const cache = new Map();
 const dbs = new Map();
@@ -33,114 +32,27 @@ async function update() {
     }
 }
 
-async function wipe(type) {
-    const full = join(path, type);
-    await close(type);
-    try {
-        if (existsSync(full)) {
-            await rm(full, { recursive: true, force: true });
-        }
-        return true;
-    } catch {
-        return false;
-    }
-}
-
-async function inspect(type) {
-    const db = dbs.get(type);
-    if (!db) return "[]";
-    const is = types[type].json;
-    try {
-        const entries = await db.getRange();
-        return JSON.stringify(Array.from(entries, ({ key, value }) => ({
-            key, value: is ? JSON.parse(value) : value
-        })));
-    } catch {
-        return "[]";
-    }
-}
-
-async function get(type, name, entity) {
-    const db = await dbs.get(type);
-    if (!db) return variables[name];
-    try {
-        const value = await db.get(entity || name);
-        return (types[type].json ? JSON.parse(value || "{}")?.[name] : value) || variables[name];
-    } catch {
-        return variables[name];
-    }
-}
-
-async function put(type, name, value, entity) {
-    const db = await dbs.get(type);
-    if (!db) return false;
-    const key = entity || name;
-    try {
-        if (!types[type].json) return value ? await db.put(key, value) : await db.remove(key);
-        const current = await db.get(key);
-        const data = current ? JSON.parse(current) : {};
-        value ? data[name] = value : delete data[name];
-        Object.keys(data).length ? await db.put(key, JSON.stringify(data)) : await db.remove(key);
-        return true;
-    } catch {
-        return false;
-    }
-}
-
-async function del(type, name, entity) {
-    const db = await dbs.get(type);
-    if (!db) return false;
-    const key = entity || name;
-    try {
-        if (!types[type].json) return await db.remove(key);
-        const current = await db.get(key);
-        if (!current) return true;
-        const data = JSON.parse(current);
-        if (!(name in data)) return true;
-        delete data[name];
-        Object.keys(data).length ? await db.put(key, JSON.stringify(data)) : await db.remove(key);
-        return true;
-    } catch {
-        return false;
-    }
-}
-
-async function toggle(type, name, entity) {
-    if (!dbs.has(type)) return false;
-    const current = await get(type, name, entity);
-    const value = current === "true" ? "false" : "true";
-    await put(type, name, value, entity);
-    return value;
-}
-
 async function entry(type, name, sorting, guild) {
     const db = dbs.get(type);
-    if (!db) return;
-    let entries;
-    try {
-        entries = await db.getRange();
-    } catch {
-        return;
-    }
+    if (!db) return { ranked: [], length: 0 };
     const is = types[type].guild;
     const ranked = [];
     let length = 0;
-    for (const { key, value } of entries) {
-        const [entityId, guildId] = key.split(separator);
-        if (is && guildId !== guild) continue;
-        let parsed;
-        try {
-            parsed = JSON.parse(value)[name];
-        } catch {
-            continue;
+    try {
+        for await (const { key, value } of db.getRange()) {
+            const [entityId, guildId] = key.split(separator);
+            if (is && guildId !== guild) continue;
+            const parsed = JSON.parse(value)[name];
+            if (!isNaN(parsed)) {
+                ranked.push({ entity: entityId, value: parsed });
+                length++;
+            }
         }
-        if (!isNaN(parsed)) {
-            ranked.push({ entity: entityId, value: parsed });
-            length++;
-        }
+        ranked.sort((a, b) => sorting === "asc" ? a.value - b.value : b.value - a.value);
+        return { ranked, length };
+    } catch {
+        return { ranked: [], length: 0 };
     }
-    ranked.sort((a, b) => sorting === "asc" ? a.value - b.value : b.value - a.value);
-    return { ranked, length };
 }
 
 function active() {
@@ -150,12 +62,6 @@ function active() {
 module.exports = {
     close,
     update,
-    wipe,
-    inspect,
-    get,
-    put,
-    del,
-    toggle,
     entry,
     active,
     cache,

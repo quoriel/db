@@ -5,7 +5,7 @@ const { entry } = require("../../db");
 exports.default = new NativeFunction({
     name: "$lengthVar",
     version: "1.0.0",
-    description: "...",
+    description: "Возвращает количество элементов в ранжированном списке",
     output: ArgType.Number,
     brackets: true,
     unwrap: true,

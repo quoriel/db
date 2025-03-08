@@ -1,11 +1,11 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
-const { enums } = require("../../config");
-const { inspect } = require("../../db");
+const { enums, types } = require("../../config");
+const { dbs } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$inspectDB",
     version: "1.0.0",
-    description: "Возвращает список всех записей из базы данных для указанного типа переменной",
+    description: "Получение всех записей из базы данных",
     output: ArgType.Json,
     brackets: true,
     unwrap: true,
@@ -20,6 +20,19 @@ exports.default = new NativeFunction({
         }
     ],
     async execute(ctx, [type]) {
-        return this.success(await inspect(type));
+        const db = dbs.get(type);
+        if (!db) return this.success("[]");
+        const is = types[type].json;
+        let result = "[";
+        let first = true;
+        try {
+            for await (const { key, value } of db.getRange()) {
+                first ? first = false : result += ",";
+                result += '{"key":' + JSON.stringify(key) + ',"value":' + (is ? value : JSON.stringify(value)) + '}';
+            }
+            return this.success(result + "]");
+        } catch {
+            return this.success("[]");
+        }
     }
 });

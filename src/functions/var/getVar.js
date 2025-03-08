@@ -39,18 +39,22 @@ exports.default = new NativeFunction({
         }
     ],
     async execute(ctx, [type, name, entity, guild]) {
-        if (!types[type].json) return this.success(await get(type, name));
+        const db = dbs.get(type);
+        if (!db) return this.success(variables[name]);
+        if (!types[type].json) return this.success(await get(db, type, name));
         const tupe = types[type].type;
         if (tupe === null) return this.stop();
         entity ||= ctx[tupe]?.id;
         if (types[tupe].guild) entity = entity + separator + (guild?.id || ctx.guild.id);
-        return this.success(await get(type, name, entity));
+        return this.success(await get(db, type, name, entity));
     }
 });
 
-async function get(type, name, entity) {
-    const db = await dbs.get(type);
-    if (!db) return variables[name];
-    const value = await db.get(entity || name);
-    return (types[type].json ? JSON.parse(value || "{}")?.[name] : value) || variables[name];
+async function get(db, type, name, entity) {
+    try {
+        const value = await db.get(entity || name);
+        return (types[type].json ? JSON.parse(value || "{}")?.[name] : value) || variables[name];
+    } catch {
+        return variables[name];
+    }
 }

@@ -1,6 +1,6 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
 const { enums, types, separator } = require("../../config");
-const { put } = require("../../db");
+const { dbs } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$putVar",
@@ -46,11 +46,27 @@ exports.default = new NativeFunction({
         }
     ],
     async execute(ctx, [type, name, value, entity, guild]) {
-        if (!types[type].json) return this.success(await put(type, name, value));
+        const db = dbs.get(type);
+        if (!db) return this.success(false);
+        if (!types[type].json) return this.success(await put(db, type, name, value));
         const tupe = types[type].type;
         if (tupe === null) return this.stop();
         entity ||= ctx[tupe]?.id;
         if (types[tupe].guild) entity = entity + separator + (guild?.id || ctx.guild.id);
-        return this.success(await put(type, name, value, entity));
+        return this.success(await put(db, type, name, value, entity));
     }
 });
+
+async function put(db, type, name, value, entity) {
+    const key = entity || name;
+    try {
+        if (!types[type].json) return value ? await db.put(key, value) : await db.remove(key);
+        const current = await db.get(key);
+        const data = current ? JSON.parse(current) : {};
+        value ? data[name] = value : delete data[name];
+        Object.keys(data).length ? await db.put(key, JSON.stringify(data)) : await db.remove(key);
+        return true;
+    } catch {
+        return false;
+    }
+}

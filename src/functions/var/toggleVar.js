@@ -1,6 +1,6 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
 const { enums, types, separator } = require("../../config");
-const { toggle } = require("../../db");
+const { dbs } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$toggleVar",
@@ -39,11 +39,33 @@ exports.default = new NativeFunction({
         }
     ],
     async execute(ctx, [type, name, entity, guild]) {
-        if (!types[type].json) return this.success(await toggle(type, name));
+        const db = await dbs.get(type);
+        if (!db) return this.success(false);
+        if (!types[type].json) return this.success(await toggle(db, type, name));
         const tupe = types[type].type;
         if (tupe === null) return this.stop();
         entity ||= ctx[tupe]?.id;
         if (types[tupe].guild) entity = entity + separator + (guild?.id || ctx.guild.id);
-        return this.success(await toggle(type, name, entity));
+        return this.success(await toggle(db, type, name, entity));
     }
 });
+
+async function toggle(db, type, name, entity) {
+    const key = entity || name;
+    try {
+        const current = await db.get(key);
+        if (types[type].json) {
+            const data = JSON.parse(current || "{}");
+            const value = data[name] === "true" ? "false" : "true";
+            data[name] = value;
+            await db.put(key, JSON.stringify(data));
+            return value;
+        } else {
+            const value = current === "true" ? "false" : "true";
+            await db.put(key, value);
+            return value;
+        }
+    } catch {
+        return false;
+    }
+}

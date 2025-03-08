@@ -18,6 +18,6 @@ exports.default = new NativeFunction({
         }
     ],
     async execute(ctx, [name]) {
-        return this.success(await cache.get(name));
+        return this.success(cache.get(name));
     }
 });

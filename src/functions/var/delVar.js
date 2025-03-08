@@ -1,6 +1,6 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
 const { enums, types, separator } = require("../../config");
-const { del } = require("../../db");
+const { dbs } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$delVar",
@@ -39,11 +39,29 @@ exports.default = new NativeFunction({
         }
     ],
     async execute(ctx, [type, name, entity, guild]) {
-        if (!types[type].json) return this.success(await del(type, name));
+        const db = dbs.get(type);
+        if (!db) return this.success(false);
+        if (!types[type].json) return this.success(await del(db, type, name));
         const tupe = types[type].type;
         if (tupe === null) return this.stop();
         entity ||= ctx[tupe]?.id;
         if (types[tupe].guild) entity = entity + separator + (guild?.id || ctx.guild.id);
-        return this.success(await del(type, name, entity));
+        return this.success(await del(db, type, name, entity));
     }
 });
+
+async function del(db, type, name, entity) {
+    const key = entity || name;
+    try {
+        if (!types[type].json) return await db.remove(key);
+        const current = await db.get(key);
+        if (!current) return true;
+        const data = JSON.parse(current);
+        if (!(name in data)) return true;
+        delete data[name];
+        Object.keys(data).length ? await db.put(key, JSON.stringify(data)) : await db.remove(key);
+        return true;
+    } catch {
+        return false;
+    }
+}

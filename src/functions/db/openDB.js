@@ -22,7 +22,7 @@ exports.default = new NativeFunction({
         }
     ],
     execute(ctx, [type]) {
-        if (dbs.has(type)) return this.success("true");
+        if (dbs.has(type)) return this.success(true);
         try {
             const db = open({
                 path: join(path, type),
@@ -32,9 +32,9 @@ exports.default = new NativeFunction({
                 cache: true
             });
             dbs.set(type, db);
-            return this.success("true");
+            return this.success(true);
         } catch {
-            return this.success("false");
+            return this.success(false);
         }
     }
 });
