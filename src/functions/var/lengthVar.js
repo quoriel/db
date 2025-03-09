@@ -40,7 +40,7 @@ exports.default = new NativeFunction({
         }
     ],
     async execute(ctx, [type, name, sorting, guild]) {
-    	if (!types[type].json) return this.success();
+    	if (!types[type].json) return this.success("0");
         const data = await entry(type, name, sorting, guild?.id || ctx.guild.id);
         return this.success(data.length);
     }
