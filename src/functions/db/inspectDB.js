@@ -28,7 +28,7 @@ exports.default = new NativeFunction({
         try {
             for await (const { key, value } of db.getRange()) {
                 first ? first = false : result += ",";
-                result += '{"key":' + JSON.stringify(key) + ',"value":' + (is ? value : JSON.stringify(value)) + '}';
+                result += '{"key":' + key + ',"value":' + (is ? value : JSON.stringify(value)) + '}';
             }
             return this.success(result + "]");
         } catch {
