@@ -25,7 +25,9 @@ async function update() {
         if (!existsSync(full)) {
             await writeFile(full, "{}");
         }
-        variables = JSON.parse(await readFile(full, "utf8"));
+        const text = await readFile(full, "utf8");
+        const parsed = JSON.parse(text);
+        Object.assign(variables, parsed);
         return true;
     } catch {
         return false;
