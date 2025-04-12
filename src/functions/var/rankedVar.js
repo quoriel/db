@@ -37,6 +37,7 @@ exports.default = new NativeFunction({
             description: "Тип результата",
             type: ArgType.Enum,
             enum: enums.result,
+            required: true,
             rest: false
         },
         {
