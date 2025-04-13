@@ -19,10 +19,10 @@ async function close(type) {
 }
 
 async function update() {
+    const full = join(path, "variables.json");
+    const exists = existsSync(full);
     try {
-        const full = join(path, "variables.json");
         await mkdir(path, { recursive: true });
-        const exists = existsSync(full);
         const text = exists ? await readFile(full, "utf8") : "{}";
         if (!exists) await writeFile(full, text);
         Object.assign(variables, JSON.parse(text));
