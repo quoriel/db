@@ -25,6 +25,7 @@ async function update() {
         await mkdir(path, { recursive: true });
         const text = exists ? await readFile(full, "utf8") : "{}";
         if (!exists) await writeFile(full, text);
+        Object.keys(variables).forEach(key => delete variables[key]);
         Object.assign(variables, JSON.parse(text));
         return true;
     } catch {
