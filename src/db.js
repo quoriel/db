@@ -19,15 +19,13 @@ async function close(type) {
 }
 
 async function update() {
-    const full = join(path, "variables.json");
     try {
+        const full = join(path, "variables.json");
         await mkdir(path, { recursive: true });
-        if (!existsSync(full)) {
-            await writeFile(full, "{}");
-        }
-        const text = await readFile(full, "utf8");
-        const parsed = JSON.parse(text);
-        Object.assign(variables, parsed);
+        const exists = existsSync(full);
+        const text = exists ? await readFile(full, "utf8") : "{}";
+        if (!exists) await writeFile(full, text);
+        Object.assign(variables, JSON.parse(text));
         return true;
     } catch {
         return false;
