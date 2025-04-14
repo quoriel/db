@@ -37,7 +37,8 @@ async function entry(type, name, sorting, guild) {
     const db = dbs.get(type);
     if (!db) return { ranked: [], length: 0 };
     const is = types[type].guild;
-    const ranked = [];
+    let result = "[";
+    let first = true;
     let length = 0;
     try {
         for await (const { key, value } of db.getRange()) {
@@ -45,10 +46,12 @@ async function entry(type, name, sorting, guild) {
             if (is && guildId !== guild) continue;
             const parsed = JSON.parse(value)[name];
             if (!isNaN(parsed)) {
-                ranked.push({ entity: entityId, value: parsed });
+                first ? first = false : result += ",";
+                result += `{"entity":"${entityId}","value":"${parsed}"}`;
                 length++;
             }
         }
+        const ranked = JSON.parse(result + "]");
         ranked.sort((a, b) => sorting === "asc" ? a.value - b.value : b.value - a.value);
         return { ranked, length };
     } catch {
