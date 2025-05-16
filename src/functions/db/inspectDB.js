@@ -1,6 +1,5 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
-const { enums, types } = require("../../config");
-const { dbs } = require("../../db");
+const { dbs, config } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$inspectDB",
@@ -13,16 +12,16 @@ exports.default = new NativeFunction({
         {
             name: "type",
             description: "Тип переменной",
-            type: ArgType.Enum,
-            enum: enums.type,
+            type: ArgType.String,
             required: true,
             rest: false
         }
     ],
     async execute(ctx, [type]) {
+        if (!config?.types?.[type]) return this.successJSON([]);
         const db = dbs.get(type);
-        if (!db) return this.success("[]");
-        const is = types[type].json;
+        if (!db) return this.successJSON([]);
+        const is = config.types[type].json;
         let result = "[";
         let first = true;
         try {
@@ -30,9 +29,9 @@ exports.default = new NativeFunction({
                 first ? first = false : result += ",";
                 result += '{"key":"' + key + '","value":' + (is ? value : JSON.stringify(value)) + '}';
             }
-            return this.success(result + "]");
+            return this.successJSON(result + "]");
         } catch {
-            return this.success("[]");
+            return this.successJSON([]);
         }
     }
 });

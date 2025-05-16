@@ -6,7 +6,7 @@
     "author": "Mlad (https://github.com/eolthar)",
     "license": "GPL-3.0",
     "dependencies": {
-        "@tryforge/forgescript": "^2.2.0",
-        "lmdb": "^3.2.6"
+        "@tryforge/forgescript": "^2.3.0",
+        "lmdb": "^3.3.0"
     }
 }

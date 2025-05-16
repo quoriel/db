@@ -1,11 +1,11 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
-const { dbs, variables, config, get, getJson } = require("../../db");
+const { board, config } = require("../../db");
 
 exports.default = new NativeFunction({
-    name: "$getVar",
+    name: "$positionBoard",
     version: "1.0.0",
-    description: "Получает значение переменной, связанной с сущностью",
-    output: ArgType.Unknown,
+    description: "Возвращает позицию указанной сущности в ранжированном списке",
+    output: ArgType.Number,
     brackets: true,
     unwrap: true,
     args: [
@@ -30,21 +30,29 @@ exports.default = new NativeFunction({
             rest: false
         },
         {
+            name: "sorting",
+            description: "Тип сортировки",
+            type: ArgType.Enum,
+            enum: {
+                asc: "asc",
+                desc: "desc"
+            },
+            rest: false
+        },
+        {
             name: "guild",
             description: "Идентификатор гильдии",
             type: ArgType.Guild,
             rest: false
         }
     ],
-    async execute(ctx, [type, name, entity, guild]) {
-        if (!config?.types?.[type]) return this.success(getN(variables, name));
-        const db = dbs.get(type);
-        if (!db) return this.success(getJson(variables, name));
-        if (!config.types[type].json) return this.success(await get(db, type, name));
+    async execute(ctx, [type, name, entity, sorting, guild]) {
+        if (!config?.types?.[type]?.json) return this.success(0);
         const tupe = config.types[type].type;
-        if (tupe === null) return this.success(getJson(variables, name));
+        if (tupe === null) return this.success(0);
         entity ||= ctx[tupe]?.id;
-        if (config.types[tupe].guild) entity = entity + config.separator + (guild?.id || ctx.guild.id);
-        return this.success(await get(db, type, name, entity));
+        const data = await board(type, name, sorting, guild?.id || ctx.guild.id);
+        const index = data.items.findIndex(item => item.entity === entity);
+        return this.success(index + 1);
     }
 });

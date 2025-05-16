@@ -1,6 +1,5 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
-const { enums } = require("../../config");
-const { close } = require("../../db");
+const { close, config } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$closeDB",
@@ -13,13 +12,13 @@ exports.default = new NativeFunction({
         {
             name: "type",
             description: "Тип переменной",
-            type: ArgType.Enum,
-            enum: enums.type,
+            type: ArgType.String,
             required: true,
             rest: false
         }
     ],
     async execute(ctx, [type]) {
+        if (!config?.types?.[type]) return this.success(false);
         return this.success(await close(type));
     }
 });

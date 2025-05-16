@@ -1,6 +1,5 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
-const { enums, types, separator } = require("../../config");
-const { dbs } = require("../../db");
+const { dbs, config, del } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$delVar",
@@ -13,8 +12,7 @@ exports.default = new NativeFunction({
         {
             name: "type",
             description: "Тип переменной",
-            type: ArgType.Enum,
-            enum: enums.type,
+            type: ArgType.String,
             required: true,
             rest: false
         },
@@ -39,29 +37,14 @@ exports.default = new NativeFunction({
         }
     ],
     async execute(ctx, [type, name, entity, guild]) {
+        if (!config?.types?.[type]) return this.success(false);
         const db = dbs.get(type);
         if (!db) return this.success(false);
-        if (!types[type].json) return this.success(await del(db, type, name));
-        const tupe = types[type].type;
-        if (tupe === null) return this.stop();
+        if (!config.types[type].json) return this.success(await del(db, type, name));
+        const tupe = config.types[type].type;
+        if (tupe === null) return this.success(false);
         entity ||= ctx[tupe]?.id;
-        if (types[tupe].guild) entity = entity + separator + (guild?.id || ctx.guild.id);
+        if (config.types[tupe].guild) entity = entity + config.separator + (guild?.id || ctx.guild.id);
         return this.success(await del(db, type, name, entity));
     }
 });
-
-async function del(db, type, name, entity) {
-    const key = entity || name;
-    try {
-        if (!types[type].json) return await db.remove(key);
-        const current = await db.get(key);
-        if (!current) return true;
-        const data = JSON.parse(current);
-        if (!(name in data)) return true;
-        delete data[name];
-        Object.keys(data).length ? await db.put(key, JSON.stringify(data)) : await db.remove(key);
-        return true;
-    } catch {
-        return false;
-    }
-}

@@ -1,7 +1,6 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
+const { dbs, config, path } = require("../../db");
 const { open } = require("lmdb");
-const { enums, path } = require("../../config");
-const { dbs } = require("../../db");
 const { join } = require("path");
 
 exports.default = new NativeFunction({
@@ -15,13 +14,13 @@ exports.default = new NativeFunction({
         {
             name: "type",
             description: "Тип переменной",
-            type: ArgType.Enum,
-            enum: enums.type,
+            type: ArgType.String,
             required: true,
             rest: false
         }
     ],
     execute(ctx, [type]) {
+        if (!config?.types?.[type]) return this.success(false);
         if (dbs.has(type)) return this.success(true);
         try {
             const db = open({
