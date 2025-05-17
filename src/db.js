@@ -102,7 +102,9 @@ async function toggle(db, type, name, entity) {
 
 async function close(type) {
     const db = dbs.get(type);
-    if (!db) return true;
+    if (!db) {
+        return true;
+    }
     try {
         await db.close();
         dbs.delete(type);
