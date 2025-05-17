@@ -36,17 +36,27 @@ exports.default = new NativeFunction({
         }
     ],
     async execute(ctx, [type, merge, entity, guild]) {
-        if (!config?.types?.[type]) return this.successJSON({});
+        if (!config?.types?.[type]) {
+            return this.successJSON({});
+        }
         const db = dbs.get(type);
-        if (!db || !config.types[type].json) return this.successJSON({});
+        if (!db || !config.types[type].json) {
+            return this.successJSON({});
+        }
         const tupe = config.types[type].type;
-        if (tupe === null) return this.successJSON({});
-        entity ||= ctx[tupe]?.id;
-        if (config.types[tupe].guild) entity = entity + config.separator + (guild?.id || ctx.guild.id);
+        if (!entity) {
+            if (tupe === null) {
+                return this.successJSON({});
+            }
+            entity = ctx[tupe]?.id;
+        }
+        if (config.types[tupe].guild) {
+            entity = entity + config.separator + (guild?.id || ctx.guild.id);
+        }
         try {
-            const raw = await db.get(entity);
-            const object = raw ? JSON.parse(raw) : {};
-            const result = merge ? { ...variables, ...object } : object;
+            const current = await db.get(entity);
+            const data = current ? JSON.parse(current) : {};
+            const result = merge ? { ...variables, ...data } : data;
             return this.successJSON(JSON.stringify(result));
         } catch {
             return this.successJSON({});

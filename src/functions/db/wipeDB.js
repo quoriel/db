@@ -44,15 +44,25 @@ exports.default = new NativeFunction({
         }
     ],
     async execute(ctx, [type, mode, entity, guild]) {
-        if (!config?.types?.[type]) return this.success(false);
+        if (!config?.types?.[type]) {
+            return this.success(false);
+        }
         try {
             if (mode === "entity") {
                 const db = dbs.get(type);
-                if (!db || !config.types[type].json) return this.success(false);
+                if (!db || !config.types[type].json) {
+                    return this.success(false);
+                }
                 const tupe = config.types[type].type;
-                if (tupe === null) return this.success(false);
-                entity ||= ctx[tupe]?.id;
-                if (config.types[tupe].guild) entity = entity + config.separator + (guild?.id || ctx.guild.id);
+                if (!entity) {
+                    if (tupe === null) {
+                        return this.success(false);
+                    }
+                    entity = ctx[tupe]?.id;
+                }
+                if (config.types[tupe].guild) {
+                    entity = entity + config.separator + (guild?.id || ctx.guild.id);
+                }
                 await db.remove(entity);
                 return this.success(true);
             }

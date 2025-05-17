@@ -37,14 +37,26 @@ exports.default = new NativeFunction({
         }
     ],
     async execute(ctx, [type, name, entity, guild]) {
-        if (!config?.types?.[type]) return this.success();
+        if (!config?.types?.[type]) {
+            return this.success();
+        }
         const db = await dbs.get(type);
-        if (!db) return this.success();
-        if (!config.types[type].json) return this.success(await toggle(db, type, name));
+        if (!db) {
+            return this.success();
+        }
+        if (!config.types[type].json) {
+            return this.success(await toggle(db, type, name));
+        }
         const tupe = config.types[type].type;
-        if (tupe === null) return this.success();
-        entity ||= ctx[tupe]?.id;
-        if (config.types[tupe].guild) entity = entity + config.separator + (guild?.id || ctx.guild.id);
+        if (!entity) {
+            if (tupe === null) {
+                return this.success();
+            }
+            entity = ctx[tupe]?.id;
+        }
+        if (config.types[tupe].guild) {
+            entity = entity + config.separator + (guild?.id || ctx.guild.id);
+        }
         return this.success(await toggle(db, type, name, entity));
     }
 });

@@ -49,10 +49,18 @@ exports.default = new NativeFunction({
     async execute(ctx, [type, name, entity, sorting, guild]) {
         if (!config?.types?.[type]?.json) return this.success(0);
         const tupe = config.types[type].type;
-        if (tupe === null) return this.success(0);
-        entity ||= ctx[tupe]?.id;
+        if (!entity) {
+            if (tupe === null) {
+                return this.success(0);
+            }
+            entity = ctx[tupe]?.id;
+        }
         const data = await board(type, name, sorting, guild?.id || ctx.guild.id);
-        const index = data.items.findIndex(item => item.entity === entity);
-        return this.success(index + 1);
+        for (let i = 0; i < data.items.length; i++) {
+            if (data.items[i].entity === entity) {
+                return this.success(i + 1);
+            }
+        }
+        return this.success(0);
     }
 });

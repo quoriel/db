@@ -1,5 +1,5 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
-const { variables, getN } = require("../../db");
+const { variables, getJson } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$variables",
@@ -17,7 +17,7 @@ exports.default = new NativeFunction({
         }
     ],
     async execute(ctx, [name]) {
-        const value = name ? getN(variables, name) : variables;
+        const value = name ? getJson(variables, name) : variables;
         return this.success(typeof value === "object" ? JSON.stringify(value) : value);
     }
 });

@@ -12,7 +12,15 @@ let config = {};
 async function get(db, type, name, entity) {
     try {
         const value = await db.get(entity || name);
-        return (config.types[type].json ? getJson(JSON.parse(value || "{}"), name) : value) || getJson(variables, name);
+        if (config.types[type].json) {
+            if (value) {
+                return getJson(JSON.parse(value), name) || getJson(variables, name);
+            } else {
+                return getJson(variables, name);
+            }
+        } else {
+            return value || getJson(variables, name);
+        }
     } catch {
         return getJson(variables, name);
     }
@@ -21,11 +29,25 @@ async function get(db, type, name, entity) {
 async function put(db, type, name, value, entity) {
     const key = entity || name;
     try {
-        if (!config.types[type].json) return value ? await db.put(key, value) : await db.remove(key);
+        if (!config.types[type].json) {
+            if (value) {
+                return await db.put(key, value);
+            } else {
+                return await db.remove(key);
+            }
+        }
         const current = await db.get(key);
         const data = current ? JSON.parse(current) : {};
-        value ? putJson(data, name, value) : delJson(data, name);
-        Object.keys(data).length ? await db.put(key, JSON.stringify(data)) : await db.remove(key);
+        if (value) {
+            putJson(data, name, value);
+        } else {
+            delJson(data, name);
+        }
+        if (Object.keys(data).length) {
+            await db.put(key, JSON.stringify(data));
+        } else {
+            await db.remove(key);
+        }
         return true;
     } catch {
         return false;
@@ -35,12 +57,20 @@ async function put(db, type, name, value, entity) {
 async function del(db, type, name, entity) {
     const key = entity || name;
     try {
-        if (!config.types[type].json) return await db.remove(key);
+        if (!config.types[type].json) {
+            return await db.remove(key);
+        }
         const current = await db.get(key);
-        if (!current) return true;
+        if (!current) {
+            return true;
+        }
         const data = JSON.parse(current);
         delJson(data, name);
-        Object.keys(data).length ? await db.put(key, JSON.stringify(data)) : await db.remove(key);
+        if (Object.keys(data).length) {
+            await db.put(key, JSON.stringify(data));
+        } else {
+            await db.remove(key);
+        }
         return true;
     } catch {
         return false;
@@ -52,12 +82,14 @@ async function toggle(db, type, name, entity) {
     try {
         let current = await db.get(key);
         if (!config.types[type].json) {
-            current ||= getJson(variables, name);
+            if (!current) {
+                current = getJson(variables, name);
+            }
             const value = current === "true" ? "false" : "true";
             await db.put(key, value);
             return value;
         }
-        const data = JSON.parse(current || "{}");
+        const data = current ? JSON.parse(current) : {};
         const old = getJson(data, name) || getJson(variables, name);
         const value = old === "true" ? "false" : "true";
         putJson(data, name, value);
@@ -82,23 +114,24 @@ async function close(type) {
 
 async function board(type, name, sorting, guild) {
     const db = dbs.get(type);
-    if (!db) return { items: [], count: 0 };
+    if (!db) {
+        return { items: [], count: 0 };
+    }
     const is = config.types[type].guild;
-    let result = "[";
-    let first = true;
+    const items = [];
     let count = 0;
     try {
         for await (const { key, value } of db.getRange()) {
             const [entityId, guildId] = key.split(config.separator);
-            if (is && guildId !== guild) continue;
+            if (is && guildId !== guild) {
+                continue;
+            }
             const parsed = getJson(JSON.parse(value), name);
             if (!isNaN(parsed)) {
-                first ? first = false : result += ",";
-                result += `{"entity":"${entityId}","value":"${parsed}"}`;
+                items.push({ entity: entityId, value: parsed });
                 count++;
             }
         }
-        const items = JSON.parse(result + "]");
         items.sort((a, b) => sorting === "asc" ? a.value - b.value : b.value - a.value);
         return { items, count };
     } catch {
@@ -136,7 +169,9 @@ function delJson(object, name) {
     const last = keys.pop();
     let current = object;
     for (const key of keys) {
-        if (typeof current[key] !== "object" || !current[key]) return;
+        if (typeof current[key] !== "object" || !current[key]) {
+            return;
+        }
         current = current[key];
     }
     delete current[last];

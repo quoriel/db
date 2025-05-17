@@ -18,18 +18,20 @@ exports.default = new NativeFunction({
         }
     ],
     async execute(ctx, [type]) {
-        if (!config?.types?.[type]) return this.successJSON([]);
+        if (!config?.types?.[type]) {
+            return this.successJSON([]);
+        }
         const db = dbs.get(type);
-        if (!db) return this.successJSON([]);
+        if (!db) {
+            return this.successJSON([]);
+        }
         const is = config.types[type].json;
-        let result = "[";
-        let first = true;
+        const result = [];
         try {
             for await (const { key, value } of db.getRange()) {
-                first ? first = false : result += ",";
-                result += '{"key":"' + key + '","value":' + (is ? value : JSON.stringify(value)) + '}';
+                result.push({ key, value: is ? value : JSON.stringify(value) });
             }
-            return this.successJSON(result + "]");
+            return this.successJSON(result);
         } catch {
             return this.successJSON([]);
         }
