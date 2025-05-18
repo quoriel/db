@@ -42,7 +42,7 @@ exports.default = new NativeFunction({
     ],
     async execute(ctx, [type, name, sorting, guild]) {
         const db = dbs.get(type);
-        if (!config?.types?.[type]?.json || !db) {
+        if (!config?.types?.[type] || !db) {
             return this.success(0);
         }
         const data = await board(db, type, name, sorting, guild?.id || ctx.guild.id);

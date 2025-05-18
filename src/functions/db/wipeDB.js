@@ -1,5 +1,5 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
-const { close, config, path } = require("../../db");
+const { dbs, config, path } = require("../../db");
 const { existsSync } = require("fs");
 const { rm } = require("fs").promises;
 const { join } = require("path");
@@ -20,13 +20,17 @@ exports.default = new NativeFunction({
             rest: false
         }
     ],
-    async execute(ctx, [type, mode, entity, guild]) {
+    async execute(ctx, [type]) {
         if (!config?.types?.[type]) {
             return this.success(false);
         }
+        const db = dbs.get(type);
         try {
             const full = join(path, type);
-            await close(type);
+            if (db) {
+                await db.close();
+                dbs.delete(type);
+            }
             if (existsSync(full)) {
                 await rm(full, { recursive: true, force: true });
             }

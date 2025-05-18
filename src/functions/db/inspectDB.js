@@ -24,8 +24,8 @@ exports.default = new NativeFunction({
         }
         const result = [];
         try {
-            for await (const { entity, value } of db.getRange()) {
-                result.push({ entity, value });
+            for await (const { key, value } of db.getRange()) {
+                result.push({ key, value });
             }
             return this.successJSON(result);
         } catch {

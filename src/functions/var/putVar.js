@@ -38,7 +38,7 @@ exports.default = new NativeFunction({
     ],
     async execute(ctx, [type, json, entity, guild]) {
         const db = dbs.get(type);
-        if (!config?.types?.[type] || !db) {
+        if (!config?.types?.[type] || !db || typeof json !== "object" || Array.isArray(json)) {
             return this.success(false);
         }
         const tupe = config.types[type].type;
@@ -52,7 +52,11 @@ exports.default = new NativeFunction({
             entity = entity + config.separator + (guild?.id || ctx.guild.id);
         }
         try {
-            await db.put(entity, json);
+            if (Object.keys(json).length) {
+                await db.put(entity, json);
+            } else {
+                await db.remove(entity);
+            }
             return this.success(true);
         } catch {
             return this.success(false);

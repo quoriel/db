@@ -35,7 +35,7 @@ exports.default = new NativeFunction({
             description: "Тип результата",
             type: ArgType.Enum,
             enum: {
-                entity: "entity",
+                key: "key",
                 value: "value"
             },
             required: true,
@@ -60,7 +60,7 @@ exports.default = new NativeFunction({
     ],
     async execute(ctx, [type, name, position, result, sorting, guild]) {
         const db = dbs.get(type);
-        if (!config?.types?.[type]?.json || !db) {
+        if (!config?.types?.[type] || !db) {
             return this.success();
         }
         const data = await board(db, type, name, sorting, guild?.id || ctx.guild.id);

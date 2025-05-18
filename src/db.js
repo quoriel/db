@@ -14,14 +14,14 @@ async function board(db, type, name, sorting, guild) {
     const items = [];
     let count = 0;
     try {
-        for await (const { key, num } of db.getRange()) {
+        for await (const { key, value } of db.getRange()) {
             const [entity, guildId] = key.split(config.separator);
             if (is && guildId !== guild) {
                 continue;
             }
-            const value = num[name];
-            if (!isNaN(value)) {
-                items.push({ entity, value });
+            const num = value[name];
+            if (!isNaN(num)) {
+                items.push({ key: entity, value: num });
                 count++;
             }
         }
