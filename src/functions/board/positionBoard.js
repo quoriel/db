@@ -49,21 +49,21 @@ exports.default = new NativeFunction({
     async execute(ctx, [type, name, entity, sorting, guild]) {
         const db = dbs.get(type);
         if (!config?.types?.[type] || !db) {
-            return this.success(0);
+            return this.success(-1);
         }
         const tupe = config.types[type].type;
         if (!entity) {
             if (tupe === null) {
-                return this.success(0);
+                return this.success(-1);
             }
             entity = ctx[tupe]?.id;
         }
         const data = await board(db, type, name, sorting, guild?.id || ctx.guild.id);
         for (let i = 0; i < data.items.length; i++) {
-            if (data.items[i].entity === entity) {
-                return this.success(i + 1);
+            if (data.items[i].key === entity) {
+                return this.success(i);
             }
         }
-        return this.success(0);
+        return this.success(-1);
     }
 });
