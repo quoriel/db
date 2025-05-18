@@ -19,7 +19,7 @@ exports.default = new NativeFunction({
         {
             name: "merge",
             description: "Объединить данные с переменными по умолчанию",
-            type: ArgType.String,
+            type: ArgType.Boolean,
             rest: false
         },
         {
