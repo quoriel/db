@@ -1,0 +1,33 @@
+{
+    "separator": "~",
+    "types": {
+        "global": {
+            "type": null,
+            "guild": false
+        },
+        "user": {
+            "type": "user",
+            "guild": false
+        },
+        "member": {
+            "type": "member",
+            "guild": true
+        },
+        "guild": {
+            "type": "guild",
+            "guild": false
+        },
+        "channel": {
+            "type": "channel",
+            "guild": true
+        },
+        "role": {
+            "type": "role",
+            "guild": true
+        },
+        "message": {
+            "type": "message",
+            "guild": true
+        }
+    }
+}
