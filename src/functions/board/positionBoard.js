@@ -1,5 +1,4 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
-const { config } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$positionBoard",
