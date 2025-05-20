@@ -9,29 +9,6 @@ const dbs = new Map();
 let variables = {};
 let config = {};
 
-async function board(db, type, name, sorting, guild) {
-    const is = config.types[type].guild;
-    const items = [];
-    let count = 0;
-    try {
-        for await (const { key, value } of db.getRange()) {
-            const [entity, guildId] = key.split(config.separator);
-            if (is && guildId !== guild) {
-                continue;
-            }
-            const num = value[name];
-            if (!isNaN(num)) {
-                items.push({ key: entity, value: num });
-                count++;
-            }
-        }
-        items.sort((a, b) => sorting === "asc" ? a.value - b.value : b.value - a.value);
-        return { items, count };
-    } catch {
-        return { items: [], count: 0 };
-    }
-}
-
 async function update() {
     try {
         await mkdir(path, { recursive: true });
@@ -59,7 +36,6 @@ async function rewrite(name, target, content) {
 
 module.exports = {
     update,
-    board,
     cache,
     dbs,
     variables,
