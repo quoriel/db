@@ -1,5 +1,5 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
-const { dbs, config } = require("../../db");
+const { dbs } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$inspectDB",
@@ -19,7 +19,7 @@ exports.default = new NativeFunction({
     ],
     async execute(ctx, [type]) {
         const db = dbs.get(type);
-        if (!config?.types?.[type] || !db) {
+        if (!db) {
             return this.successJSON([]);
         }
         const result = [];
