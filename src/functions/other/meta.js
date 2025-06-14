@@ -6,6 +6,7 @@ exports.default = new NativeFunction({
     version: "1.0.0",
     description: "Возвращает объект конфигурации или переменных по умолчанию",
     output: ArgType.Json,
+    brackets: true,
     unwrap: true,
     args: [
         {
