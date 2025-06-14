@@ -1,5 +1,5 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
-const { dbs, config, path } = require("../../db");
+const { dbs, path } = require("../../db");
 const { existsSync } = require("fs");
 const { rm } = require("fs").promises;
 const { join } = require("path");
@@ -21,9 +21,6 @@ exports.default = new NativeFunction({
         }
     ],
     async execute(ctx, [type]) {
-        if (!config?.types?.[type]) {
-            return this.success(false);
-        }
         const db = dbs.get(type);
         try {
             const full = join(path, type);
