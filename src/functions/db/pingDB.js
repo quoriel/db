@@ -20,7 +20,7 @@ exports.default = new NativeFunction({
     ],
     async execute(ctx, [type]) {
         const db = dbs.get(type);
-        if (!config?.types?.[type] || !db) {
+        if (!db) {
             return this.success(-1);
         }
         const start = performance.now();
