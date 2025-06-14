@@ -7,6 +7,6 @@
     "license": "GPL-3.0",
     "dependencies": {
         "@tryforge/forgescript": "^2.3.0",
-        "lmdb": "^3.3.0"
+        "lmdb": "^3.4.0"
     }
 }
