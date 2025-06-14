@@ -48,7 +48,7 @@ exports.default = new NativeFunction({
     ],
     async execute(ctx, [variable, type, name, sorting, guild]) {
         const db = dbs.get(type);
-        if (!config?.types?.[type] || !db) {
+        if (!db) {
             return this.success();
         }
         const is = config.types[type].guild;
