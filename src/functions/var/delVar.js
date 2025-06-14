@@ -31,7 +31,7 @@ exports.default = new NativeFunction({
     ],
     async execute(ctx, [type, entity, guild]) {
         const db = dbs.get(type);
-        if (!config?.types?.[type] || !db) {
+        if (!db) {
             return this.success(false);
         }
         const tupe = config.types[type].type;
@@ -41,7 +41,7 @@ exports.default = new NativeFunction({
             }
             entity = ctx[tupe]?.id;
         }
-        if (config.types[tupe].guild) {
+        if (config.types[type].guild) {
             entity = entity + config.separator + (guild?.id || ctx.guild.id);
         }
         try {
