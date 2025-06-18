@@ -4,14 +4,14 @@ const { dbs } = require("../../db");
 exports.default = new NativeFunction({
     name: "$closeDB",
     version: "1.0.0",
-    description: "Завершает соединение с базой данных",
+    description: "Closes the connection to the database",
     output: ArgType.Boolean,
     brackets: true,
     unwrap: true,
     args: [
         {
             name: "type",
-            description: "Тип данных",
+            description: "Data type",
             type: ArgType.String,
             required: true,
             rest: false

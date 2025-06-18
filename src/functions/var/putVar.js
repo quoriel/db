@@ -4,34 +4,34 @@ const { dbs, config } = require("../../db");
 exports.default = new NativeFunction({
     name: "$putVar",
     version: "1.0.0",
-    description: "Устанавливает данные для сущности",
+    description: "Sets new data for the entity",
     output: ArgType.Boolean,
     brackets: true,
     unwrap: true,
     args: [
         {
             name: "type",
-            description: "Тип данных",
+            description: "Data type",
             type: ArgType.String,
             required: true,
             rest: false
         },
         {
             name: "json",
-            description: "Новые данные",
+            description: "New value in JSON format",
             type: ArgType.Json,
             required: true,
             rest: false
         },
         {
             name: "entity",
-            description: "Идентификатор сущности",
+            description: "Entity identifier",
             type: ArgType.String,
             rest: false
         },
         {
             name: "guild",
-            description: "Идентификатор гильдии",
+            description: "Guild identifier",
             type: ArgType.Guild,
             rest: false
         }

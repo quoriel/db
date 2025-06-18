@@ -4,13 +4,13 @@ const { cache } = require("../../db");
 exports.default = new NativeFunction({
     name: "$delCache",
     version: "1.0.0",
-    description: "Удаляет данные из кэша по переменной",
+    description: "Deletes data from the cache by variable",
     brackets: true,
     unwrap: true,
     args: [
         {
             name: "name",
-            description: "Имя переменной",
+            description: "Variable name",
             type: ArgType.String,
             required: true,
             rest: false

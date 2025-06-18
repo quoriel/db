@@ -4,14 +4,14 @@ const { dbs } = require("../../db");
 exports.default = new NativeFunction({
     name: "$activeDB",
     version: "1.0.0",
-    description: "Получение списка активных баз данных",
+    description: "Returns a list of active databases",
     output: ArgType.Unknown,
     brackets: false,
     unwrap: true,
     args: [
         {
             name: "separator",
-            description: "Для разделения открытих баз",
+            description: "For separating active databases",
             type: ArgType.String,
             rest: false
         }

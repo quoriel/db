@@ -3,21 +3,21 @@ const { NativeFunction, ArgType } = require("@tryforge/forgescript");
 exports.default = new NativeFunction({
     name: "$positionBoard",
     version: "1.0.0",
-    description: "Возвращает позицию указанной сущности в ранжированном списке",
+    description: "Returns the position of the specified entity in the ranked list",
     output: ArgType.Number,
     brackets: true,
     unwrap: true,
     args: [
         {
             name: "variable",
-            description: "Ключ к возврату его значения",
+            description: "Environment variable name",
             type: ArgType.String,
             required: true,
             rest: false
         },
         {
             name: "entity",
-            description: "Идентификатор сущности",
+            description: "Entity identifier",
             type: ArgType.String,
             rest: false
         }

@@ -4,33 +4,33 @@ const { dbs, variables, config } = require("../../db");
 exports.default = new NativeFunction({
     name: "$getVar",
     version: "1.0.0",
-    description: "Получает все данные, связанной с сущностью",
+    description: "Gets all data associated with the entity",
     output: ArgType.Json,
     brackets: true,
     unwrap: true,
     args: [
         {
             name: "type",
-            description: "Тип данных",
+            description: "Data type",
             type: ArgType.String,
             required: true,
             rest: false
         },
         {
             name: "merge",
-            description: "Объединить данные с переменными по умолчанию",
+            description: "Merge data with default variables",
             type: ArgType.Boolean,
             rest: false
         },
         {
             name: "entity",
-            description: "Идентификатор сущности",
+            description: "Entity identifier",
             type: ArgType.String,
             rest: false
         },
         {
             name: "guild",
-            description: "Идентификатор гильдии",
+            description: "Guild identifier",
             type: ArgType.Guild,
             rest: false
         }

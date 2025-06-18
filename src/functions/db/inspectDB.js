@@ -4,14 +4,14 @@ const { dbs } = require("../../db");
 exports.default = new NativeFunction({
     name: "$inspectDB",
     version: "1.0.0",
-    description: "Получение всех записей из базы данных",
+    description: "Retrieves all records from the database",
     output: ArgType.Json,
     brackets: true,
     unwrap: true,
     args: [
         {
             name: "type",
-            description: "Тип данных",
+            description: "Data type",
             type: ArgType.String,
             required: true,
             rest: false

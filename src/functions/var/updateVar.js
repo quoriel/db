@@ -4,7 +4,7 @@ const { update } = require("../../db");
 exports.default = new NativeFunction({
     name: "$updateVar",
     version: "1.0.0",
-    description: "Синхронизирует данные с файлами config.json и variables.json",
+    description: "Synchronizes data with config.json and variables.json files",
     output: ArgType.Boolean,
     unwrap: true,
     async execute(ctx) {

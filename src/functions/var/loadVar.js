@@ -4,33 +4,33 @@ const { dbs, config } = require("../../db");
 exports.default = new NativeFunction({
     name: "$loadVar",
     version: "1.0.0",
-    description: "Загружает значения переменных для указанной сущности и сохраняет их в переменную окружения",
+    description: "Loads the variables of the specified entity and saves them to the environment variable",
     brackets: true,
     unwrap: true,
     args: [
         {
             name: "variable",
-            description: "Переменная, в которую нужно загрузить",
+            description: "Environment variable name",
             type: ArgType.String,
             required: true,
             rest: false
         },
         {
             name: "type",
-            description: "Тип данных",
+            description: "Data type",
             type: ArgType.String,
             required: true,
             rest: false
         },
         {
             name: "entity",
-            description: "Идентификатор сущности",
+            description: "Entity identifier",
             type: ArgType.String,
             rest: false
         },
         {
             name: "guild",
-            description: "Идентификатор гильдии",
+            description: "Guild identifier",
             type: ArgType.Guild,
             rest: false
         }

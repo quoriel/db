@@ -7,14 +7,14 @@ const { join } = require("path");
 exports.default = new NativeFunction({
     name: "$wipeDB",
     version: "1.0.0",
-    description: "Удаляет всю базу данных",
+    description: "Deletes the entire database",
     output: ArgType.Boolean,
     brackets: true,
     unwrap: true,
     args: [
         {
             name: "type",
-            description: "Тип данных",
+            description: "Data type",
             type: ArgType.String,
             required: true,
             rest: false

@@ -4,34 +4,34 @@ const { dbs, config } = require("../../db");
 exports.default = new NativeFunction({
     name: "$loadBoard",
     version: "1.0.0",
-    description: "Возвращает весь отсортированный ранжированный список",
+    description: "Loads the entire sorted ranked list into the environment variable",
     brackets: true,
     unwrap: true,
     args: [
         {
             name: "variable",
-            description: "Переменная, в которую нужно загрузить",
+            description: "Environment variable name",
             type: ArgType.String,
             required: true,
             rest: false
         },
         {
             name: "type",
-            description: "Тип данных",
+            description: "Data type",
             type: ArgType.String,
             required: true,
             rest: false
         },
         {
             name: "name",
-            description: "Имя переменной",
+            description: "Variable name",
             type: ArgType.String,
             required: true,
             rest: false
         },
         {
             name: "sorting",
-            description: "Тип сортировки",
+            description: "Sorting type",
             type: ArgType.Enum,
             enum: {
                 asc: "asc",
@@ -41,7 +41,7 @@ exports.default = new NativeFunction({
         },
         {
             name: "guild",
-            description: "Идентификатор гильдии",
+            description: "Entity identifier",
             type: ArgType.Guild,
             rest: false
         }

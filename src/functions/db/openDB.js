@@ -6,20 +6,20 @@ const { join } = require("path");
 exports.default = new NativeFunction({
     name: "$openDB",
     version: "1.0.0",
-    description: "Открывает соединение с одной или несколькими базами данных",
+    description: "Opens a connection to one or more databases",
     output: ArgType.Json,
     brackets: true,
     unwrap: true,
     args: [
         {
             name: "types",
-            description: "Тип(ы) данных",
+            description: "Data type(s)",
             type: ArgType.String,
             required: true,
             rest: true
         }
     ],
-    execute(ctx, [...types]) {
+    execute(ctx, [types]) {
         const result = [];
         for (const type of types) {
             if (!config?.types?.[type]) {

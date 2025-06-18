@@ -5,14 +5,14 @@ const { dbs } = require("../../db");
 exports.default = new NativeFunction({
     name: "$pingDB",
     version: "1.0.0",
-    description: "Проверяет время отклика от базы данных",
+    description: "Checks the database response time",
     output: ArgType.Number,
     brackets: true,
     unwrap: true,
     args: [
         {
             name: "type",
-            description: "Тип данных",
+            description: "Data type",
             type: ArgType.String,
             required: true,
             rest: false

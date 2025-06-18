@@ -4,27 +4,27 @@ const { dbs, config } = require("../../db");
 exports.default = new NativeFunction({
     name: "$delVar",
     version: "1.0.0",
-    description: "Удаляет запись указанной сущности",
+    description: "Deletes the record of the specified entity",
     output: ArgType.Boolean,
     brackets: true,
     unwrap: true,
     args: [
         {
             name: "type",
-            description: "Тип данных",
+            description: "Data type",
             type: ArgType.String,
             required: true,
             rest: false
         },
         {
             name: "entity",
-            description: "Идентификатор сущности",
+            description: "Entity identifier",
             type: ArgType.String,
             rest: false
         },
         {
             name: "guild",
-            description: "Идентификатор гильдии",
+            description: "Guild identifier",
             type: ArgType.Guild,
             rest: false
         }
