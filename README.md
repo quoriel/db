@@ -1,12 +1,12 @@
 # QuorielDB
-Интуитивно понятный и высокопроизводительный интерфейс для работы с базами данных в **ForgeScript**, обеспечивающий надежное и масштабируемое хранение данных с помощью **LMDB**.
+An intuitive and high-performance interface for working with databases in ForgeScript, providing reliable and scalable data storage using LMDB.
 
-## Установка
+## Installation
 ```
-npm i https://github.com/quoriel/db.git lmdb
+npm i github:quoriel/db lmdb
 ```
 
-## Подключение
+## Connection
 ```js
 const { ForgeClient } = require("@tryforge/forgescript");
 const { QuorielDB } = require("@quoriel/db");
@@ -20,12 +20,12 @@ const client = new ForgeClient({
 client.login("...");
 ```
 
-## Конфиг
-Файл **config.json** находится в папке **quoriel/db** вашего бота.  
-- **separator** - символ, который разделяет идентификатор сущности и гильдии (по умолчанию `~`). Не используйте этот символ в идентификаторах сущностей.
-- **types** - список типов данных, с которыми будет работать база. Для каждого типа указываются параметры:
-  - **type** - тип для автоматического определения идентификатора сущности (`user`, `member`, `guild`, `channel`, `role`, `message`). Если указать `null`, идентификатор сущности нужно будет передавать обьязательно.
-  - **guild** - `true` или `false`. Определяет, привязывать ли данные к гильдии (например, для member, channel, role, message).
+## Config
+The **config.json** file is located in the **quoriel/db** folder of your bot.  
+- **separator** – the character that separates the entity and guild identifiers (default is `~`). Do not use this character in entity identifiers.
+- **types** – a list of data types that the database will work with. For each type, specify the following parameters:
+  - **type** – the type for automatic entity identifier detection (`user`, `member`, `guild`, `channel`, `role`, `message`). If set to `null`, the entity identifier must be provided explicitly.
+  - **guild** – `true` or `false`. Determines whether to bind the data to a guild (for example, for member, channel, role, message).
 
-## Значения по умолчанию
-Файл **variables.json** в папке **quoriel/db** предназначен для хранения переменных по умолчанию. Изначально файл пустой - пользователь сам задаёт нужные переменные и их значения.
+## Default values
+The **variables.json** file in the **quoriel/db** folder is intended for storing default variables. Initially, the file is empty — the user sets the required variables and their values themselves.
