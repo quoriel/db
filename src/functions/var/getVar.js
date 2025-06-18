@@ -17,6 +17,12 @@ exports.default = new NativeFunction({
             rest: false
         },
         {
+            name: "merge",
+            description: "Объединить данные с переменными по умолчанию",
+            type: ArgType.Boolean,
+            rest: false
+        },
+        {
             name: "entity",
             description: "Идентификатор сущности",
             type: ArgType.String,
@@ -29,7 +35,7 @@ exports.default = new NativeFunction({
             rest: false
         }
     ],
-    async execute(ctx, [type, entity, guild]) {
+    async execute(ctx, [type, merge, entity, guild]) {
         const db = dbs.get(type);
         if (!db) {
             return this.successJSON({});
@@ -46,7 +52,7 @@ exports.default = new NativeFunction({
         }
         try {
             const data = await db.get(entity) || {};
-            return this.successJSON(data);
+            return this.successJSON(merge ? { ...variables, ...data } : data);
         } catch {
             return this.successJSON({});
         }
