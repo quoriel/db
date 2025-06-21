@@ -32,11 +32,8 @@ exports.default = new NativeFunction({
             }
             try {
                 const db = open({
-                    path: join(path, type),
-                    noReadAhead: true,
-                    noMemInit: true,
-                    compression: true,
-                    cache: true
+                    ...config.open,
+                    path: join(path, type)
                 });
                 dbs.set(type, db);
                 result.push(true);

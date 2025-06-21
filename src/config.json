@@ -1,5 +1,11 @@
 {
     "separator": "~",
+    "open": {
+        "noReadAhead": true,
+        "noMemInit": true,
+        "compression": true,
+        "cache": true
+    },
     "types": {
         "global": {
             "type": null,
