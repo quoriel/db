@@ -1,5 +1,5 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
-const { dbs, variables, config } = require("../../db");
+const { dbs, config } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$getVar",
@@ -17,12 +17,6 @@ exports.default = new NativeFunction({
             rest: false
         },
         {
-            name: "merge",
-            description: "Merge data with default variables",
-            type: ArgType.Boolean,
-            rest: false
-        },
-        {
             name: "entity",
             description: "Entity identifier",
             type: ArgType.String,
@@ -35,7 +29,7 @@ exports.default = new NativeFunction({
             rest: false
         }
     ],
-    async execute(ctx, [type, merge, entity, guild]) {
+    async execute(ctx, [type, entity, guild]) {
         const db = dbs.get(type);
         if (!db) {
             return this.successJSON({});
@@ -52,7 +46,7 @@ exports.default = new NativeFunction({
         }
         try {
             const data = await db.get(entity) || {};
-            return this.successJSON(merge ? { ...variables, ...data } : data);
+            return this.successJSON(data);
         } catch {
             return this.successJSON({});
         }
