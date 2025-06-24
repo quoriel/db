@@ -1,6 +1,11 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
 const { config, variables } = require("../../db");
 
+const MetaType = {
+    config: "config",
+    variables: "variables"
+};
+
 exports.default = new NativeFunction({
     name: "$meta",
     version: "1.0.0",
@@ -13,10 +18,7 @@ exports.default = new NativeFunction({
             name: "type",
             description: "config or variables",
             type: ArgType.Enum,
-            enum: {
-                config: "config",
-                variables: "variables"
-            },
+            enum: MetaType,
             required: true
         }
     ],

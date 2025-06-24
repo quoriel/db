@@ -1,13 +1,13 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
-const { dbs } = require("../../db");
+const { cache } = require("../../db");
 
 exports.default = new NativeFunction({
-    name: "$activeDB",
+    name: "$keysCache",
     version: "1.0.0",
-    description: "Returns a list of active databases",
+    description: "Returns all keys from the cache",
     output: ArgType.Json,
     unwrap: true,
     execute(ctx) {
-        return this.successJSON(Array.from(dbs.keys()));
+        return this.successJSON(Array.from(cache.keys()));
     }
 });

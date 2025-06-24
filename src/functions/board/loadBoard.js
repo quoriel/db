@@ -1,6 +1,11 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
 const { dbs, config } = require("../../db");
 
+const SortType = {
+    asc: "asc",
+    desc: "desc"
+};
+
 exports.default = new NativeFunction({
     name: "$loadBoard",
     version: "1.0.0",
@@ -33,10 +38,7 @@ exports.default = new NativeFunction({
             name: "sorting",
             description: "Sorting type",
             type: ArgType.Enum,
-            enum: {
-                asc: "asc",
-                desc: "desc"
-            },
+            enum: SortType,
             rest: false
         },
         {
@@ -57,13 +59,13 @@ exports.default = new NativeFunction({
         let count = 0;
         try {
             for await (const { key, value } of db.getRange()) {
-                const [entity, guildId] = key.split(config.separator);
-                if (is && guildId !== guild) {
+                const [entityID, guildID] = key.split(config.separator);
+                if (is && guildID !== guild) {
                     continue;
                 }
-                const num = value[name];
-                if (!isNaN(num)) {
-                    items.push({ key: entity, value: num });
+                const numeric = value[name];
+                if (!isNaN(numeric)) {
+                    items.push({ key: entityID, value: numeric });
                     count++;
                 }
             }
