@@ -43,7 +43,7 @@ exports.default = new NativeFunction({
         },
         {
             name: "guild",
-            description: "Entity identifier",
+            description: "Guild identifier",
             type: ArgType.Guild,
             rest: false
         }
