@@ -24,7 +24,7 @@ exports.default = new NativeFunction({
         }
     ],
     async execute(ctx, [variable, json]) {
-        const data = JSON.assign(variables, json);
+        const data = Object.assign(variables, json);
         ctx.setEnvironmentKey(variable, data);
         this.success();
     }
