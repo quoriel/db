@@ -18,14 +18,13 @@ exports.default = new NativeFunction({
         {
             name: "json",
             description: "Data for merging",
-            type: ArgType.String,
+            type: ArgType.Json,
             required: true,
             rest: false
         }
     ],
     async execute(ctx, [variable, json]) {
-        const data = Object.assign(variables, json);
-        ctx.setEnvironmentKey(variable, data);
+        ctx.setEnvironmentKey(variable, { ...variables, ...json });
         return this.success();
     }
 });
