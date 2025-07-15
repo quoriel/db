@@ -56,7 +56,7 @@ exports.default = new NativeFunction({
         const is = config.types[type].guild;
         guild = guild?.id || ctx.guild.id;
         const items = [];
-        let count = 0;
+        let count = -1;
         try {
             for await (const { key, value } of db.getRange()) {
                 const [entityID, guildID] = key.split(config.separator);

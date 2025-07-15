@@ -4,17 +4,11 @@ const { variables } = require("../../db");
 exports.default = new NativeFunction({
     name: "$fallbackVar",
     version: "1.0.0",
-    description: "Loads merged data with default variables into an environment variable",
+    description: "Merges input data with default variables and returns the result",
+    output: ArgType.Json,
     brackets: true,
     unwrap: true,
     args: [
-        {
-            name: "variable",
-            description: "Environment variable name",
-            type: ArgType.String,
-            required: true,
-            rest: false
-        },
         {
             name: "json",
             description: "Data for merging",
@@ -23,8 +17,7 @@ exports.default = new NativeFunction({
             rest: false
         }
     ],
-    async execute(ctx, [variable, json]) {
-        ctx.setEnvironmentKey(variable, { ...variables, ...json });
-        return this.success();
+    async execute(ctx, [json]) {
+        return this.successJSON({ ...variables, ...json });
     }
 });
