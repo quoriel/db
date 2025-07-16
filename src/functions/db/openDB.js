@@ -20,14 +20,14 @@ exports.default = new NativeFunction({
         }
     ],
     execute(ctx, [types]) {
-        const result = [];
+        const results = [];
         for (const type of types) {
             if (!config?.types?.[type]) {
-                result.push(false);
+                results.push(false);
                 continue;
             }
             if (dbs.has(type)) {
-                result.push(true);
+                results.push(true);
                 continue;
             }
             try {
@@ -36,11 +36,11 @@ exports.default = new NativeFunction({
                     path: join(path, type)
                 });
                 dbs.set(type, db);
-                result.push(true);
+                results.push(true);
             } catch {
-                result.push(false);
+                results.push(false);
             }
         }
-        return this.successJSON(result);
+        return this.successJSON(results);
     }
 });

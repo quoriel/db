@@ -22,12 +22,12 @@ exports.default = new NativeFunction({
         if (!db) {
             return this.successJSON([]);
         }
-        const result = [];
+        const results = [];
         try {
             for (const key of db.getKeys()) {
-                result.push(key);
+                results.push(key);
             }
-            return this.successJSON(result);
+            return this.successJSON(results);
         } catch {
             return this.successJSON([]);
         }
