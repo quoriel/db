@@ -22,12 +22,12 @@ exports.default = new NativeFunction({
         if (!db) {
             return this.successJSON([]);
         }
-        const result = [];
+        const results = [];
         try {
             for await (const { key, value } of db.getRange()) {
-                result.push({ key, value });
+                results.push({ key, value });
             }
-            return this.successJSON(result);
+            return this.successJSON(results);
         } catch {
             return this.successJSON([]);
         }

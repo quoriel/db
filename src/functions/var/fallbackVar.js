@@ -10,14 +10,14 @@ exports.default = new NativeFunction({
     unwrap: true,
     args: [
         {
-            name: "json",
+            name: "object",
             description: "Data for merging",
             type: ArgType.Json,
             required: true,
             rest: false
         }
     ],
-    async execute(ctx, [json]) {
-        return this.successJSON({ ...variables, ...json });
+    async execute(ctx, [object]) {
+        return this.successJSON({ ...variables, ...object });
     }
 });

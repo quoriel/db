@@ -17,8 +17,8 @@ exports.default = new NativeFunction({
             rest: false
         },
         {
-            name: "value",
-            description: "New value in JSON format",
+            name: "object",
+            description: "New data object",
             type: ArgType.Json,
             required: true,
             rest: false
@@ -36,9 +36,9 @@ exports.default = new NativeFunction({
             rest: false
         }
     ],
-    async execute(ctx, [type, value, entity, guild]) {
+    async execute(ctx, [type, object, entity, guild]) {
         const db = dbs.get(type);
-        if (!db || typeof value !== "object" || Array.isArray(value)) {
+        if (!db || typeof object !== "object" || Array.isArray(object)) {
             return this.success(false);
         }
         const tupe = config.types[type].type;
@@ -52,8 +52,8 @@ exports.default = new NativeFunction({
             entity = entity + config.separator + (guild?.id || ctx.guild.id);
         }
         try {
-            if (Object.keys(value).length) {
-                await db.put(entity, value);
+            if (Object.keys(object).length) {
+                await db.put(entity, object);
             } else {
                 await db.remove(entity);
             }
