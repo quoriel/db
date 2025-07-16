@@ -17,7 +17,7 @@ exports.default = new NativeFunction({
             rest: true
         }
     ],
-    async execute(ctx, types) {
+    async execute(ctx, [types]) {
         const results = [];
         for (const type of types) {
             const db = dbs.get(type);
