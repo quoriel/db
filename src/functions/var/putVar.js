@@ -38,7 +38,7 @@ exports.default = new NativeFunction({
     ],
     async execute(ctx, [type, object, entity, guild]) {
         const db = dbs.get(type);
-        if (!db || typeof object !== "object" || Array.isArray(object)) {
+        if (!db || object?.constructor !== Object) {
             return this.success(false);
         }
         const tupe = config.types[type].type;
