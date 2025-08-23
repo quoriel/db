@@ -8,7 +8,7 @@ const SortType = {
 
 exports.default = new NativeFunction({
     name: "$loadBoard",
-    version: "1.0.0",
+    version: "1.1.0",
     description: "Loads the entire sorted ranked list into the environment variable",
     brackets: true,
     unwrap: true,
@@ -56,7 +56,7 @@ exports.default = new NativeFunction({
         const is = config.types[type].guild;
         guild = guild?.id || ctx.guild.id;
         const items = [];
-        let count = -1;
+        let count = 0;
         try {
             for await (const { key, value } of db.getRange()) {
                 const [entityID, guildID] = key.split(config.separator);
