@@ -1,10 +1,13 @@
 {
     "name": "@quoriel/db",
     "description": "Powerful and flexible interface for working with databases in ForgeScript, integrating LMDB support for reliable data storage",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "main": "src/main.js",
     "author": "Mlad (https://github.com/eolthar)",
     "license": "GPL-3.0",
+    "scripts": {
+        "docgen": "node src/docgen.js"
+    },
     "dependencies": {
         "@tryforge/forgescript": "^2.3.0",
         "lmdb": "^3.4.0"

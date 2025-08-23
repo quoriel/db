@@ -3,7 +3,7 @@ const { variables } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$fallbackVar",
-    version: "1.0.0",
+    version: "1.1.0",
     description: "Merges input data with default variables and returns the result",
     output: ArgType.Json,
     brackets: true,

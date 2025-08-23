@@ -8,7 +8,7 @@ const InternalType = {
 
 exports.default = new NativeFunction({
     name: "$internal",
-    version: "1.0.0",
+    version: "1.1.0",
     description: "Returns the config or default variables object",
     output: ArgType.Json,
     brackets: true,
