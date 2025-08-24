@@ -3,7 +3,6 @@
     "open": {
         "noReadAhead": true,
         "noMemInit": true,
-        "compression": true,
         "cache": true
     },
     "types": {
@@ -36,4 +35,5 @@
             "guild": true
         }
     }
+
 }
