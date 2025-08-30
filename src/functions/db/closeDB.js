@@ -1,4 +1,5 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
+const { log } = require('@quoriel/utils');
 const { dbs } = require("../../db");
 
 exports.default = new NativeFunction({
@@ -29,7 +30,8 @@ exports.default = new NativeFunction({
                 await db.close();
                 dbs.delete(type);
                 results.push(true);
-            } catch {
+            } catch (error) {
+                log("ERROR", "closeDB", `Failed to close database "${type}"`, error.message);
                 results.push(false);
             }
         }

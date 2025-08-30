@@ -1,5 +1,6 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
 const { dbs, config, path } = require("../../db");
+const { log } = require('@quoriel/utils');
 const { open } = require("lmdb");
 const { join } = require("path");
 
@@ -33,11 +34,12 @@ exports.default = new NativeFunction({
             try {
                 const db = open({
                     ...config.open,
-                    path: join(path, type)
+                    path: join(path, "types", type)
                 });
                 dbs.set(type, db);
                 results.push(true);
-            } catch {
+            } catch (error) {
+                log("ERROR", "openDB", `Failed to open database "${type}"`, error.message);
                 results.push(false);
             }
         }

@@ -1,11 +1,11 @@
 const { ForgeExtension } = require("@tryforge/forgescript");
+const { description, version } = require("../package.json");
 const { update } = require("./db");
-const pkg = require("../package.json");
 
 class QuorielDB extends ForgeExtension {
     name = "QuorielDB";
-    description = pkg.description;
-    version = pkg.version;
+    description = description;
+    version = version;
 
     init() {
         update();
@@ -13,4 +13,4 @@ class QuorielDB extends ForgeExtension {
     }
 }
 
-exports.QuorielDB = QuorielDB;
+module.exports = { QuorielDB };

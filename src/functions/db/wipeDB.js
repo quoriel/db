@@ -1,4 +1,5 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
+const { log } = require("@quoriel/utils");
 const { dbs, path } = require("../../db");
 const { existsSync } = require("fs");
 const { rm } = require("fs").promises;
@@ -32,7 +33,8 @@ exports.default = new NativeFunction({
                 await rm(full, { recursive: true, force: true });
             }
             return this.success(true);
-        } catch {
+        } catch (error) {
+            log("ERROR", "wipeDB", `Failed to wipe database of type "${type}"`, error.message);
             return this.success(false);
         }
     }

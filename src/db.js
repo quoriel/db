@@ -1,6 +1,7 @@
 const { existsSync } = require("fs");
 const { mkdir, writeFile, readFile } = require("fs").promises;
 const { resolve, join } = require("path");
+const { log } = require("@quoriel/utils");
 
 const path = resolve(process.cwd(), "quoriel", "db");
 const cache = new Map();
@@ -10,15 +11,12 @@ let variables = {};
 let config = {};
 
 async function update() {
-    try {
-        await mkdir(path, { recursive: true });
-        await rewrite("variables.json", variables, "{}");
-        const data = await readFile(resolve(__dirname, "config.json"), "utf8");
-        await rewrite("config.json", config, data);
-        return true;
-    } catch {
-        return false;
-    }
+    const results = [];
+    await mkdir(path, { recursive: true });
+    results.push(await rewrite("variables.json", variables, "{}"));
+    const data = await readFile(resolve(__dirname, "config.json"), "utf8");
+    results.push(await rewrite("config.json", config, data));
+    return results;
 }
 
 async function rewrite(name, target, content) {
@@ -26,12 +24,18 @@ async function rewrite(name, target, content) {
     if (!existsSync(full)) {
         await writeFile(full, content, "utf8");
     }
-    const data = await readFile(full, "utf8");
-    for (const key of Object.keys(target)) {
-        delete target[key];
+    try {
+        const data = await readFile(full, "utf8");
+        for (const key of Object.keys(target)) {
+            delete target[key];
+        }
+        const parsed = JSON.parse(data);
+        Object.assign(target, parsed);
+        return true;
+    } catch (error) {
+        log("ERROR", "updateVar", `Failed to parse JSON from "${name}"`, error.message);
+        return false;
     }
-    const parsed = JSON.parse(data);
-    Object.assign(target, parsed);
 }
 
 module.exports = {

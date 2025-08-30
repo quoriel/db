@@ -1,4 +1,5 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
+const { log } = require("@quoriel/utils");
 const { dbs } = require("../../db");
 
 exports.default = new NativeFunction({
@@ -32,7 +33,8 @@ exports.default = new NativeFunction({
         try {
             await db.prefetch(ids);
             return this.success(true);
-        } catch {
+        } catch (error) {
+            log("ERROR", "prefetchDB", `Failed to prefetch entries for database of type "${type}"`, error.message);
             return this.success(false);
         }
     }

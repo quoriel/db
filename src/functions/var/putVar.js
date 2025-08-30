@@ -1,5 +1,6 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
 const { dbs, config } = require("../../db");
+const { log } = require('@quoriel/utils');
 
 exports.default = new NativeFunction({
     name: "$putVar",
@@ -58,7 +59,8 @@ exports.default = new NativeFunction({
                 await db.remove(entity);
             }
             return this.success(true);
-        } catch {
+        } catch (error) {
+            log("ERROR", "putVar", `Database operation failed for entity "${entity}" in database "${type}"`, error.message);
             return this.success(false);
         }
     }

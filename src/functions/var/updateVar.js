@@ -3,11 +3,11 @@ const { update } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$updateVar",
-    version: "1.0.0",
+    version: "1.2.0",
     description: "Synchronizes data with config.json and variables.json files",
-    output: ArgType.Boolean,
+    output: ArgType.Json,
     unwrap: true,
     async execute(ctx) {
-        return this.success(await update());
+        return this.successJSON(await update());
     }
 });

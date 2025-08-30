@@ -1,4 +1,5 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
+const { log } = require("@quoriel/utils");
 const { dbs } = require("../../db");
 
 exports.default = new NativeFunction({
@@ -28,7 +29,8 @@ exports.default = new NativeFunction({
                 results.push({ key, value });
             }
             return this.successJSON(results);
-        } catch {
+        } catch (error) {
+            log("ERROR", "rangeDB", `Failed to retrieve entries for database of type "${type}"`, error.message);
             return this.successJSON([]);
         }
     }
