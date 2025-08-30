@@ -4,7 +4,7 @@ const { log } = require('@quoriel/utils');
 
 exports.default = new NativeFunction({
     name: "$putVar",
-    version: "1.0.0",
+    version: "1.2.0",
     description: "Sets new data for the entity",
     output: ArgType.Boolean,
     brackets: true,

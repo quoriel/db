@@ -4,7 +4,7 @@ const { log } = require("@quoriel/utils");
 
 exports.default = new NativeFunction({
     name: "$valueVar",
-    version: "1.0.0",
+    version: "1.2.0",
     description: "Retrieves a variable value from the database or returns a default value",
     output: ArgType.Unknown,
     brackets: true,

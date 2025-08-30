@@ -4,7 +4,7 @@ const { dbs } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$prefetchDB",
-    version: "1.1.0",
+    version: "1.2.0",
     description: "Prefetches database entries into memory to speed up future access",
     output: ArgType.Boolean,
     brackets: true,

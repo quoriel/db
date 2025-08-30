@@ -6,7 +6,7 @@ const { join } = require("path");
 
 exports.default = new NativeFunction({
     name: "$openDB",
-    version: "1.0.0",
+    version: "1.2.0",
     description: "Opens a connection to one or more databases",
     output: ArgType.Json,
     brackets: true,

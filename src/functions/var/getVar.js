@@ -4,7 +4,7 @@ const { dbs, config } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$getVar",
-    version: "1.0.0",
+    version: "1.2.0",
     description: "Gets all data associated with the entity",
     output: ArgType.Json,
     brackets: true,

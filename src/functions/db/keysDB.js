@@ -4,7 +4,7 @@ const { dbs } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$keysDB",
-    version: "1.0.0",
+    version: "1.2.0",
     description: "Retrieves all keys from the database",
     output: ArgType.Json,
     brackets: true,

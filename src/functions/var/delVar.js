@@ -4,7 +4,7 @@ const { dbs, config } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$delVar",
-    version: "1.0.0",
+    version: "1.2.0",
     description: "Deletes the record of the specified entity",
     output: ArgType.Boolean,
     brackets: true,

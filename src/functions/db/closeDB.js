@@ -4,7 +4,7 @@ const { dbs } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$closeDB",
-    version: "1.0.0",
+    version: "1.2.0",
     description: "Closes the connection to one or more databases",
     output: ArgType.Json,
     brackets: true,

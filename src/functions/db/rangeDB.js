@@ -4,7 +4,7 @@ const { dbs } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$rangeDB",
-    version: "1.1.0",
+    version: "1.2.0",
     description: "Retrieves all records from the database",
     output: ArgType.Json,
     brackets: true,
