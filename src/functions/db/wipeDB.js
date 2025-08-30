@@ -23,7 +23,7 @@ exports.default = new NativeFunction({
     ],
     async execute(ctx, [type]) {
         const db = dbs.get(type);
-        const full = join(path, type);
+        const full = join(path, "types", type);
         try {
             if (db) {
                 await db.close();
