@@ -73,7 +73,7 @@ exports.default = new NativeFunction({
             ctx.setEnvironmentKey(variable, { items, count, type });
             return this.success();
         } catch (error) {
-            Logger.error(`Failed to load board for type "${type}":\n`, error.message);
+            Logger.error(error);
             return this.success();
         }
     }

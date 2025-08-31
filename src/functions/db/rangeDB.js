@@ -29,7 +29,7 @@ exports.default = new NativeFunction({
             }
             return this.successJSON(results);
         } catch (error) {
-            Logger.error(`Failed to retrieve entries for database of type "${type}":\n`, error.message);
+            Logger.error(error);
             return this.successJSON([]);
         }
     }

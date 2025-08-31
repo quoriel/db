@@ -33,7 +33,7 @@ exports.default = new NativeFunction({
             }
             return this.success(true);
         } catch (error) {
-            Logger.error(`Failed to wipe database of type "${type}":\n`, error.message);
+            Logger.error(error);
             return this.success(false);
         }
     }

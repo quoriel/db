@@ -48,7 +48,7 @@ exports.default = new NativeFunction({
             const data = await db.get(entity) || {};
             return this.successJSON(data);
         } catch (error) {
-            Logger.error(`Failed to retrieve data for entity "${entity}" from database "${type}":\n`, error.message);
+            Logger.error(error);
             return this.successJSON({});
         }
     }

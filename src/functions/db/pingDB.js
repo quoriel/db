@@ -28,7 +28,7 @@ exports.default = new NativeFunction({
             await db.get("ping");
             return this.success(Math.round(performance.now() - start));
         } catch (error) {
-            Logger.error(`Failed to ping database of type "${type}":\n`, error.message);
+            Logger.error(error);
             return this.success(-1);
         }
     }

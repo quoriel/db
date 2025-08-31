@@ -55,7 +55,7 @@ exports.default = new NativeFunction({
             const data = await db.get(entity) || {};
             return this.success(data[name] || variables[name]);
         } catch (error) {
-            Logger.error(`Failed to get variable "${name}" for entity "${entity}" in database of type "${type}":\n`, error.message);
+            Logger.error(error);
             return this.success(variables[name]);
         }
     }

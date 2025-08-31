@@ -33,7 +33,7 @@ async function rewrite(name, target, content) {
         Object.assign(target, parsed);
         return true;
     } catch (error) {
-        Logger.error(`Failed to parse JSON from "${name}":\n`, error.message);
+        Logger.error(error);
         return false;
     }
 }

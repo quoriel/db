@@ -59,7 +59,7 @@ exports.default = new NativeFunction({
             }
             return this.success(true);
         } catch (error) {
-            Logger.error(`Database operation failed for entity "${entity}" in database "${type}":\n`, error.message);
+            Logger.error(error);
             return this.success(false);
         }
     }

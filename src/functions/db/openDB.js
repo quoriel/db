@@ -38,7 +38,7 @@ exports.default = new NativeFunction({
                 dbs.set(type, db);
                 results.push(true);
             } catch (error) {
-                Logger.error(`Failed to open database "${type}":\n`, error.message);
+                Logger.error(error);
                 results.push(false);
             }
         }

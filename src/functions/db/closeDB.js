@@ -30,7 +30,7 @@ exports.default = new NativeFunction({
                 dbs.delete(type);
                 results.push(true);
             } catch (error) {
-                Logger.error(`Failed to close database "${type}":\n`, error.message);
+                Logger.error(error);
                 results.push(false);
             }
         }
