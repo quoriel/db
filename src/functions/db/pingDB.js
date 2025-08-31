@@ -1,4 +1,4 @@
-const { NativeFunction, ArgType } = require("@tryforge/forgescript");
+const { NativeFunction, ArgType, Logger } = require("@tryforge/forgescript");
 const { performance } = require("perf_hooks");
 const { dbs } = require("../../db");
 
@@ -27,7 +27,8 @@ exports.default = new NativeFunction({
         try {
             await db.get("ping");
             return this.success(Math.round(performance.now() - start));
-        } catch {
+        } catch (error) {
+            Logger.error(`Failed to ping database of type "${type}":\n`, error.message);
             return this.success(-1);
         }
     }

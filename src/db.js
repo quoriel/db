@@ -1,7 +1,7 @@
 const { existsSync } = require("fs");
 const { mkdir, writeFile, readFile } = require("fs").promises;
 const { resolve, join } = require("path");
-const { log } = require("@quoriel/utils");
+const { Logger } = require("@tryforge/forgescript");
 
 const path = resolve(process.cwd(), "quoriel", "db");
 const cache = new Map();
@@ -33,7 +33,7 @@ async function rewrite(name, target, content) {
         Object.assign(target, parsed);
         return true;
     } catch (error) {
-        log("ERROR", "updateVar", `Failed to parse JSON from "${name}"`, error.message);
+        Logger.error(`Failed to parse JSON from "${name}":\n`, error.message);
         return false;
     }
 }

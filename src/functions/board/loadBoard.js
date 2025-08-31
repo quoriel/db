@@ -1,5 +1,4 @@
-const { NativeFunction, ArgType } = require("@tryforge/forgescript");
-const { log } = require("@quoriel/utils");
+const { NativeFunction, ArgType, Logger } = require("@tryforge/forgescript");
 const { dbs, config } = require("../../db");
 
 const SortType = {
@@ -74,7 +73,7 @@ exports.default = new NativeFunction({
             ctx.setEnvironmentKey(variable, { items, count, type });
             return this.success();
         } catch (error) {
-            log("ERROR", "loadBoard", `Failed to load board for type "${type}"`, error.message);
+            Logger.error(`Failed to load board for type "${type}":\n`, error.message);
             return this.success();
         }
     }

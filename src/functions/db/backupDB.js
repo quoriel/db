@@ -1,5 +1,4 @@
-const { NativeFunction, ArgType } = require("@tryforge/forgescript");
-const { log } = require("@quoriel/utils");
+const { NativeFunction, ArgType, Logger } = require("@tryforge/forgescript");
 const { dbs, path } = require("../../db");
 const { mkdir, rm } = require("fs").promises;
 const { join } = require("path");
@@ -32,7 +31,7 @@ exports.default = new NativeFunction({
             await db.backup(target);
             return this.success(true);
         } catch (error) {
-            log("ERROR", "backupDB", `Failed to backup database of type "${type}"`, error.message);
+            Logger.error(`Failed to backup database of type "${type}":\n`, error.message);
             return this.success(false);
         }
     }

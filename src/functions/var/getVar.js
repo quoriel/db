@@ -1,5 +1,4 @@
-const { NativeFunction, ArgType } = require("@tryforge/forgescript");
-const { log } = require("@quoriel/utils");
+const { NativeFunction, ArgType, Logger } = require("@tryforge/forgescript");
 const { dbs, config } = require("../../db");
 
 exports.default = new NativeFunction({
@@ -49,7 +48,7 @@ exports.default = new NativeFunction({
             const data = await db.get(entity) || {};
             return this.successJSON(data);
         } catch (error) {
-            log("ERROR", "getVar", `Failed to retrieve data for entity "${entity}" from database "${type}"`, error.message);
+            Logger.error(`Failed to retrieve data for entity "${entity}" from database "${type}":\n`, error.message);
             return this.successJSON({});
         }
     }

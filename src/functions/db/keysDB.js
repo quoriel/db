@@ -1,5 +1,4 @@
-const { NativeFunction, ArgType } = require("@tryforge/forgescript");
-const { log } = require("@quoriel/utils");
+const { NativeFunction, ArgType, Logger } = require("@tryforge/forgescript");
 const { dbs } = require("../../db");
 
 exports.default = new NativeFunction({
@@ -30,7 +29,7 @@ exports.default = new NativeFunction({
             }
             return this.successJSON(results);
         } catch (error) {
-            log("ERROR", "keysDB", `Failed to retrieve keys for database of type "${type}"`, error.message);
+            Logger.error(`Failed to retrieve keys for database of type "${type}":\n`, error.message);
             return this.successJSON([]);
         }
     }

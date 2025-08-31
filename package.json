@@ -9,11 +9,7 @@
         "docgen": "node src/docgen.js"
     },
     "dependencies": {
-        "@quoriel/utils": "github:quoriel/utils",
         "@tryforge/forgescript": "^2.4.1",
         "lmdb": "^3.4.2"
-    },
-    "bundledDependencies": [
-        "@quoriel/utils"
-    ]
+    }
 }

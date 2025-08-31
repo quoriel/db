@@ -1,6 +1,5 @@
-const { NativeFunction, ArgType } = require("@tryforge/forgescript");
+const { NativeFunction, ArgType, Logger } = require("@tryforge/forgescript");
 const { dbs, variables, config } = require("../../db");
-const { log } = require("@quoriel/utils");
 
 exports.default = new NativeFunction({
     name: "$valueVar",
@@ -56,7 +55,7 @@ exports.default = new NativeFunction({
             const data = await db.get(entity) || {};
             return this.success(data[name] || variables[name]);
         } catch (error) {
-            log("ERROR", "valueVar", `Failed to get variable "${name}" for entity "${entity}" in database of type "${type}"`, error.message);
+            Logger.error(`Failed to get variable "${name}" for entity "${entity}" in database of type "${type}":\n`, error.message);
             return this.success(variables[name]);
         }
     }
