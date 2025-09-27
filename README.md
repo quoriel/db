@@ -3,7 +3,7 @@ An intuitive and high-performance interface for working with databases in **Forg
 
 ## Installation
 ```
-npm i github:quoriel/db lmdb
+npm i @quoriel/db lmdb
 ```
 
 ## Connection

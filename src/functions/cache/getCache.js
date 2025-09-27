@@ -4,7 +4,7 @@ const { cache } = require("../../db");
 exports.default = new NativeFunction({
     name: "$getCache",
     description: "Retrieves data from the cache by variable",
-    version: "1.3.0",
+    version: "1.0.0",
     output: ArgType.Unknown,
     brackets: true,
     unwrap: true,
