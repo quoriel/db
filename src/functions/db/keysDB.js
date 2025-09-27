@@ -3,8 +3,8 @@ const { dbs } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$keysDB",
-    version: "1.2.0",
     description: "Retrieves all keys from the database",
+    version: "1.2.0",
     output: ArgType.Json,
     brackets: true,
     unwrap: true,
@@ -17,16 +17,12 @@ exports.default = new NativeFunction({
             rest: false
         }
     ],
-    async execute(ctx, [type]) {
+    execute(ctx, [type]) {
         const db = dbs.get(type);
-        if (!db) {
-            return this.successJSON([]);
-        }
+        if (!db) return this.successJSON([]);
         const results = [];
         try {
-            for (const key of db.getKeys()) {
-                results.push(key);
-            }
+            for (const key of db.getKeys()) results.push(key);
             return this.successJSON(results);
         } catch (error) {
             Logger.error(error);

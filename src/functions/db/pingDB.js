@@ -4,8 +4,8 @@ const { dbs } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$pingDB",
-    version: "1.0.0",
     description: "Checks the database response time",
+    version: "1.3.0",
     output: ArgType.Number,
     brackets: true,
     unwrap: true,
@@ -20,12 +20,10 @@ exports.default = new NativeFunction({
     ],
     async execute(ctx, [type]) {
         const db = dbs.get(type);
-        if (!db) {
-            return this.success(-1);
-        }
+        if (!db) return this.success(-1);
         const start = performance.now();
         try {
-            await db.get("ping");
+            db.get("ping");
             return this.success(Math.round(performance.now() - start));
         } catch (error) {
             Logger.error(error);

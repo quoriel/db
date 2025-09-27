@@ -1,10 +1,10 @@
 const { NativeFunction, ArgType, Logger } = require("@tryforge/forgescript");
-const { dbs, config } = require("../../db");
+const { dbs, types, separator } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$putVar",
-    version: "1.2.0",
     description: "Sets new data for the entity",
+    version: "1.3.0",
     output: ArgType.Boolean,
     brackets: true,
     unwrap: true,
@@ -38,19 +38,13 @@ exports.default = new NativeFunction({
     ],
     async execute(ctx, [type, object, entity, guild]) {
         const db = dbs.get(type);
-        if (!db || object.constructor !== Object) {
-            return this.success(false);
-        }
-        const tupe = config.types[type].type;
+        if (!db || object.constructor !== Object) return this.success(false);
+        const view = types.get(type);
         if (!entity) {
-            if (tupe === null) {
-                return this.success(false);
-            }
-            entity = ctx[tupe]?.id;
+            if (view.type === null) return this.success(false);
+            entity = ctx[view.type]?.id;
         }
-        if (config.types[type].guild) {
-            entity = entity + config.separator + (guild?.id || ctx.guild.id);
-        }
+        if (view.guild) entity = entity + separator + (guild?.id || ctx.guild.id);
         try {
             if (Object.keys(object).length) {
                 await db.put(entity, object);

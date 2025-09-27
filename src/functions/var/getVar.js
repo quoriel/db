@@ -1,10 +1,10 @@
 const { NativeFunction, ArgType, Logger } = require("@tryforge/forgescript");
-const { dbs, config } = require("../../db");
+const { dbs, types, separator } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$getVar",
-    version: "1.2.0",
     description: "Gets all data associated with the entity",
+    version: "1.3.0",
     output: ArgType.Json,
     brackets: true,
     unwrap: true,
@@ -31,22 +31,15 @@ exports.default = new NativeFunction({
     ],
     async execute(ctx, [type, entity, guild]) {
         const db = dbs.get(type);
-        if (!db) {
-            return this.successJSON({});
-        }
-        const tupe = config.types[type].type
+        if (!db) return this.successJSON({});
+        const view = types.get(type);
         if (!entity) {
-            if (tupe === null) {
-                return this.successJSON({});
-            }
-            entity = ctx[tupe]?.id;
+            if (view.type === null) return this.successJSON({});
+            entity = ctx[view.type]?.id;
         }
-        if (config.types[type].guild) {
-            entity = entity + config.separator + (guild?.id || ctx.guild.id);
-        }
+        if (view.guild) entity = entity + separator + (guild?.id || ctx.guild.id);
         try {
-            const data = await db.get(entity) || {};
-            return this.successJSON(data);
+            return this.successJSON(db.get(entity) || {});
         } catch (error) {
             Logger.error(error);
             return this.successJSON({});

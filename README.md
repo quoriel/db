@@ -23,7 +23,7 @@ client.login("...");
 ## Config
 The **config.json** file is located in the **quoriel/db** folder of your bot.  
 - **separator** - the character that separates the entity and guild identifiers (default is `~`). Do not use this character in entity identifiers.
-- **open** - settings used for opening the database (via `$openDB`). Default keys are (`noReadAhead`, `noMemInit`, `cache`). Check the official **LMDB** documentation for additional database opening options.
+- **flags** - settings used for opening the database (via `$openDB`). Default keys are (`noReadAhead`, `noMemInit`, `cache`). Check the official **LMDB** documentation for additional database opening options.
 - **types** - a list of data types that the database will work with. For each type, specify the following parameters:
   - **type** - the type for automatic entity identifier detection (`user`, `member`, `guild`, `channel`, `role`, `message`). If set to `null`, the entity identifier must be provided explicitly.
   - **guild** - `true` or `false`. Determines whether to bind the data to a guild (for example, for `member`, `channel`, `role`, `message`).

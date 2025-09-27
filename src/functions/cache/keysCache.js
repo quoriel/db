@@ -3,10 +3,10 @@ const { cache } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$keysCache",
-    version: "1.0.0",
     description: "Returns all keys from the cache",
+    version: "1.3.0",
     output: ArgType.Json,
-    unwrap: true,
+    unwrap: false,
     execute(ctx) {
         return this.successJSON(Array.from(cache.keys()));
     }

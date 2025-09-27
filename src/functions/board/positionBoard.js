@@ -2,8 +2,8 @@ const { NativeFunction, ArgType } = require("@tryforge/forgescript");
 
 exports.default = new NativeFunction({
     name: "$positionBoard",
-    version: "1.1.0",
     description: "Returns the position of the specified entity in the ranked list",
+    version: "1.1.0",
     output: ArgType.Number,
     brackets: true,
     unwrap: true,
@@ -24,13 +24,9 @@ exports.default = new NativeFunction({
     ],
     async execute(ctx, [variable, entity]) {
         const json = ctx.getEnvironmentKey(variable);
-        if (!json?.items) {
-            return this.success(0);
-        }
+        if (!json?.items) return this.success(0);
         if (!entity) {
-            if (json.type === null) {
-                return this.success(0);
-            }
+            if (json.type === null) return this.success(0);
             entity = ctx[json.type]?.id;
         }
         const index = json.items.findIndex(item => item.key === entity);

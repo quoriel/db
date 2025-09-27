@@ -3,8 +3,8 @@ const { cache } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$delCache",
-    version: "1.0.0",
     description: "Deletes data from the cache by variable",
+    version: "1.0.0",
     brackets: true,
     unwrap: true,
     args: [

@@ -1,10 +1,10 @@
 const { NativeFunction, ArgType, Logger } = require("@tryforge/forgescript");
-const { dbs, config } = require("../../db");
+const { dbs, types, separator } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$delVar",
-    version: "1.2.0",
     description: "Deletes the record of the specified entity",
+    version: "1.3.0",
     output: ArgType.Boolean,
     brackets: true,
     unwrap: true,
@@ -31,19 +31,13 @@ exports.default = new NativeFunction({
     ],
     async execute(ctx, [type, entity, guild]) {
         const db = dbs.get(type);
-        if (!db) {
-            return this.success(false);
-        }
-        const tupe = config.types[type].type;
+        if (!db) return this.success(false);
+        const view = types.get(type);
         if (!entity) {
-            if (tupe === null) {
-                return this.success(false);
-            }
-            entity = ctx[tupe]?.id;
+            if (view.type === null) return this.success(false);
+            entity = ctx[view.type]?.id;
         }
-        if (config.types[type].guild) {
-            entity = entity + config.separator + (guild?.id || ctx.guild.id);
-        }
+        if (view.guild) entity = entity + separator + (guild?.id || ctx.guild.id);
         try {
             await db.remove(entity);
             return this.success(true);

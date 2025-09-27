@@ -1,13 +1,13 @@
 const { NativeFunction, ArgType, Logger } = require("@tryforge/forgescript");
-const { dbs, config, path } = require("../../db");
+const { dbs, path, types, flags } = require("../../db");
 const { open } = require("lmdb");
 const { join } = require("path");
 
 exports.default = new NativeFunction({
     name: "$openDB",
-    version: "1.2.0",
     description: "Opens a connection to one or more databases",
-    output: ArgType.Json,
+    version: "1.3.0",
+    output: ArgType.Number,
     brackets: true,
     unwrap: true,
     args: [
@@ -19,29 +19,25 @@ exports.default = new NativeFunction({
             rest: true
         }
     ],
-    execute(ctx, [types]) {
-        const results = [];
-        for (const type of types) {
-            if (!config?.types?.[type]) {
-                results.push(false);
-                continue;
-            }
+    execute(ctx, [array]) {
+        let count = 0;
+        for (const type of array) {
+            if (!types.has(type)) continue;
             if (dbs.has(type)) {
-                results.push(true);
+                count++;
                 continue;
             }
             try {
                 const db = open({
-                    ...config.open,
+                    ...flags,
                     path: join(path, "types", type)
                 });
                 dbs.set(type, db);
-                results.push(true);
+                count++;
             } catch (error) {
                 Logger.error(error);
-                results.push(false);
             }
         }
-        return this.successJSON(results);
+        return this.success(count);
     }
 });

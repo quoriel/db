@@ -1,12 +1,12 @@
 const { NativeFunction, ArgType, Logger } = require("@tryforge/forgescript");
+const { promises: { mkdir, rm } } = require("fs");
 const { dbs, path } = require("../../db");
-const { mkdir, rm } = require("fs").promises;
 const { join } = require("path");
 
 exports.default = new NativeFunction({
     name: "$backupDB",
-    version: "1.2.0",
     description: "Creates a backup of the specified database",
+    version: "1.3.0",
     output: ArgType.Boolean,
     brackets: true,
     unwrap: true,
@@ -21,14 +21,12 @@ exports.default = new NativeFunction({
     ],
     async execute(ctx, [type]) {
         const db = dbs.get(type);
-        if (!db) {
-            return this.success(false);
-        }
-        const target = join(path, "backups", type);
+        if (!db) return this.success(false);
+        const full = join(path, "backups", type);
         try {
-            await rm(target, { recursive: true, force: true });
-            await mkdir(target, { recursive: true });
-            await db.backup(target);
+            await rm(full, { recursive: true, force: true });
+            await mkdir(full, { recursive: true });
+            await db.backup(full);
             return this.success(true);
         } catch (error) {
             Logger.error(error);

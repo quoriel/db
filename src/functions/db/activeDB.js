@@ -3,10 +3,10 @@ const { dbs } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$activeDB",
-    version: "1.0.0",
     description: "Returns a list of active databases",
+    version: "1.3.0",
     output: ArgType.Json,
-    unwrap: true,
+    unwrap: false,
     execute(ctx) {
         return this.successJSON(Array.from(dbs.keys()));
     }

@@ -1,5 +1,5 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
-const { config, variables } = require("../../db");
+const { variables, types, separator, flags } = require("../../db");
 
 const InternalType = {
     config: "config",
@@ -8,8 +8,8 @@ const InternalType = {
 
 exports.default = new NativeFunction({
     name: "$internal",
-    version: "1.1.0",
     description: "Returns the config or default variables object",
+    version: "1.3.0",
     output: ArgType.Json,
     brackets: true,
     unwrap: true,
@@ -23,6 +23,6 @@ exports.default = new NativeFunction({
         }
     ],
     execute(ctx, [type]) {
-        return this.successJSON(type === "config" ? config : variables);
+        return this.successJSON(type === "config" ? { types: Object.fromEntries(types), separator, flags } : Object.fromEntries(variables));
     }
 });

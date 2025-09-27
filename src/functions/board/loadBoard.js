@@ -1,5 +1,5 @@
 const { NativeFunction, ArgType, Logger } = require("@tryforge/forgescript");
-const { dbs, config } = require("../../db");
+const { dbs, types, separator } = require("../../db");
 
 const SortType = {
     asc: "asc",
@@ -8,8 +8,8 @@ const SortType = {
 
 exports.default = new NativeFunction({
     name: "$loadBoard",
-    version: "1.2.0",
     description: "Loads the entire sorted ranked list into the environment variable",
+    version: "1.3.0",
     brackets: true,
     unwrap: true,
     args: [
@@ -48,33 +48,26 @@ exports.default = new NativeFunction({
             rest: false
         }
     ],
-    async execute(ctx, [variable, type, name, sorting, guild]) {
+    execute(ctx, [variable, type, name, sorting, guild]) {
         const db = dbs.get(type);
-        if (!db) {
-            return this.success();
-        }
-        const is = config.types[type].guild;
+        if (!db) return this.success();
+        const is = types.get(type).guild;
         guild = guild?.id || ctx.guild.id;
         const items = [];
-        let count = 0;
         try {
-            for await (const { key, value } of db.getRange()) {
-                const [entityID, guildID] = key.split(config.separator);
-                if (is && guildID !== guild) {
-                    continue;
-                }
-                const numeric = value[name];
-                if (!isNaN(numeric)) {
-                    items.push({ key: entityID, value: numeric });
-                    count++;
-                }
+            for (const { key, value } of db.getRange()) {
+                const [entityID, guildID] = key.split(separator);
+                if (is && guildID !== guild) continue;
+                const numeric = Number(value[name]);
+                if (isNaN(numeric)) continue;
+                items.push({ key: entityID, value: numeric });
             }
-            items.sort((a, b) => sorting === "asc" ? a.value - b.value : b.value - a.value);
-            ctx.setEnvironmentKey(variable, { items, count, type });
-            return this.success();
         } catch (error) {
             Logger.error(error);
             return this.success();
         }
+        items.sort((a, b) => sorting === "asc" ? a.value - b.value : b.value - a.value);
+        ctx.setEnvironmentKey(variable, { items, count: items.length, type });
+        return this.success();
     }
 });

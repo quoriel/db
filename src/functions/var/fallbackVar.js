@@ -3,8 +3,8 @@ const { variables } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$fallbackVar",
-    version: "1.1.0",
     description: "Merges input data with default variables and returns the result",
+    version: "1.3.0",
     output: ArgType.Json,
     brackets: true,
     unwrap: true,
@@ -17,7 +17,7 @@ exports.default = new NativeFunction({
             rest: false
         }
     ],
-    async execute(ctx, [object]) {
-        return this.successJSON({ ...variables, ...object });
+    execute(ctx, [object]) {
+        return this.successJSON({ ...Object.fromEntries(variables), ...object });
     }
 });

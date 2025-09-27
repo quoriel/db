@@ -1,6 +1,6 @@
 {
     "separator": "~",
-    "open": {
+    "flags": {
         "noReadAhead": true,
         "noMemInit": true,
         "cache": true

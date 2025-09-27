@@ -3,9 +3,9 @@ const { dbs } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$closeDB",
-    version: "1.2.0",
     description: "Closes the connection to one or more databases",
-    output: ArgType.Json,
+    version: "1.3.0",
+    output: ArgType.Number,
     brackets: true,
     unwrap: true,
     args: [
@@ -17,23 +17,22 @@ exports.default = new NativeFunction({
             rest: true
         }
     ],
-    async execute(ctx, [types]) {
-        const results = [];
-        for (const type of types) {
+    async execute(ctx, [array]) {
+        let count = 0;
+        for (const type of array) {
             const db = dbs.get(type);
             if (!db) {
-                results.push(true);
+                count++;
                 continue;
             }
             try {
                 await db.close();
                 dbs.delete(type);
-                results.push(true);
+                count++;
             } catch (error) {
                 Logger.error(error);
-                results.push(false);
             }
         }
-        return this.successJSON(results);
+        return this.success(count);
     }
 });

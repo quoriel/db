@@ -3,8 +3,8 @@ const { dbs } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$prefetchDB",
-    version: "1.2.0",
     description: "Prefetches database entries into memory to speed up future access",
+    version: "1.2.0",
     output: ArgType.Boolean,
     brackets: true,
     unwrap: true,
@@ -26,9 +26,7 @@ exports.default = new NativeFunction({
     ],
     async execute(ctx, [type, ids]) {
         const db = dbs.get(type);
-        if (!db) {
-            return this.success(false);
-        }
+        if (!db) return this.success(false);
         try {
             await db.prefetch(ids);
             return this.success(true);

@@ -1,10 +1,10 @@
 const { NativeFunction, ArgType, Logger } = require("@tryforge/forgescript");
-const { dbs, variables, config } = require("../../db");
+const { dbs, variables, types, separator } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$valueVar",
-    version: "1.2.0",
     description: "Retrieves a variable value from the database or returns a default value",
+    version: "1.3.0",
     output: ArgType.Unknown,
     brackets: true,
     unwrap: true,
@@ -36,27 +36,20 @@ exports.default = new NativeFunction({
             rest: false
         }
     ],
-    async execute(ctx, [type, name, entity, guild]) {
+    execute(ctx, [type, name, entity, guild]) {
         const db = dbs.get(type);
-        if (!db) {
-            return this.success(variables[name]);
-        }
-        const tupe = config.types[type].type
+        if (!db) return this.success(variables.get(name));
+        const view = types.get(type);
         if (!entity) {
-            if (tupe === null) {
-                return this.success(variables[name]);
-            }
-            entity = ctx[tupe]?.id;
+            if (view.type === null) return this.success(variables.get(name));
+            entity = ctx[view.type]?.id;
         }
-        if (config.types[type].guild) {
-            entity = entity + config.separator + (guild?.id || ctx.guild.id);
-        }
+        if (view.guild) entity = entity + separator + (guild?.id || ctx.guild.id);
         try {
-            const data = await db.get(entity) || {};
-            return this.success(data[name] || variables[name]);
+            return this.success((db.get(entity) || {})[name] || variables.get(name));
         } catch (error) {
             Logger.error(error);
-            return this.success(variables[name]);
+            return this.success(variables.get(name));
         }
     }
 });

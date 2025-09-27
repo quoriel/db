@@ -1,13 +1,13 @@
-const { NativeFunction, ArgType } = require("@tryforge/forgescript");
+const { NativeFunction } = require("@tryforge/forgescript");
 const { update } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$updateVar",
-    version: "1.2.0",
     description: "Synchronizes data with config.json and variables.json files",
-    output: ArgType.Json,
-    unwrap: true,
+    version: "1.3.0",
+    unwrap: false,
     async execute(ctx) {
-        return this.successJSON(await update());
+        await update();
+        return this.success();
     }
 });

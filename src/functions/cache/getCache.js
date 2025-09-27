@@ -3,8 +3,8 @@ const { cache } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$getCache",
-    version: "1.0.0",
     description: "Retrieves data from the cache by variable",
+    version: "1.3.0",
     output: ArgType.Unknown,
     brackets: true,
     unwrap: true,
@@ -17,7 +17,7 @@ exports.default = new NativeFunction({
             rest: false
         }
     ],
-    async execute(ctx, [name]) {
+    execute(ctx, [name]) {
         return this.success(cache.get(name));
     }
 });

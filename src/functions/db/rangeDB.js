@@ -3,8 +3,8 @@ const { dbs } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$rangeDB",
-    version: "1.2.0",
     description: "Retrieves all records from the database",
+    version: "1.3.0",
     output: ArgType.Json,
     brackets: true,
     unwrap: true,
@@ -17,16 +17,12 @@ exports.default = new NativeFunction({
             rest: false
         }
     ],
-    async execute(ctx, [type]) {
+    execute(ctx, [type]) {
         const db = dbs.get(type);
-        if (!db) {
-            return this.successJSON([]);
-        }
+        if (!db) return this.successJSON([]);
         const results = [];
         try {
-            for await (const { key, value } of db.getRange()) {
-                results.push({ key, value });
-            }
+            for (const { key, value } of db.getRange()) results.push({ key, value });
             return this.successJSON(results);
         } catch (error) {
             Logger.error(error);

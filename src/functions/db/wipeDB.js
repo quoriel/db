@@ -1,14 +1,12 @@
-const { NativeFunction, ArgType, Logger } = require("@tryforge/forgescript");
+const { NativeFunction, ArgType } = require("@tryforge/forgescript");
 const { dbs, path } = require("../../db");
-const { existsSync } = require("fs");
-const { rm } = require("fs").promises;
+const { promises: { rm } } = require("fs");
 const { join } = require("path");
 
 exports.default = new NativeFunction({
     name: "$wipeDB",
-    version: "1.2.0",
     description: "Deletes the entire database",
-    output: ArgType.Boolean,
+    version: "1.3.0",
     brackets: true,
     unwrap: true,
     args: [
@@ -23,18 +21,11 @@ exports.default = new NativeFunction({
     async execute(ctx, [type]) {
         const db = dbs.get(type);
         const full = join(path, "types", type);
-        try {
-            if (db) {
-                await db.close();
-                dbs.delete(type);
-            }
-            if (existsSync(full)) {
-                await rm(full, { recursive: true, force: true });
-            }
-            return this.success(true);
-        } catch (error) {
-            Logger.error(error);
-            return this.success(false);
+        if (db) {
+            await db.close();
+            dbs.delete(type);
         }
+        await rm(full, { recursive: true, force: true });
+        return this.success();
     }
 });

@@ -3,8 +3,8 @@ const { cache } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$putCache",
-    version: "1.0.0",
     description: "Puts data into the cache by the specified variable",
+    version: "1.0.0",
     brackets: true,
     unwrap: true,
     args: [
