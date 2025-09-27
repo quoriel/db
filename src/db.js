@@ -26,7 +26,7 @@ function populate(map, object) {
 
 async function rewrite(name, content, map) {
     const full = join(path, name);
-    await writeFile(full, content, { flag: "wx", encoding: "utf8" });
+    await writeFile(full, content, { flag: "wx", encoding: "utf8" }).catch(() => {});
     try {
         const data = await readFile(full, "utf8");
         const parsed = JSON.parse(data);
