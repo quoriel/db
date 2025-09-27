@@ -34,7 +34,7 @@ async function rewrite(name, content, map) {
             if (parsed.types) populate(types, parsed.types);
             separator = parsed.separator || "~";
             Object.keys(flags).forEach(key => delete flags[key]);
-            Object.assign(flags, parsed);
+            Object.assign(flags, parsed.flags);
         } else {
             populate(map, parsed);
         }
