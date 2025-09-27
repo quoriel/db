@@ -1,7 +1,7 @@
 {
     "name": "@quoriel/db",
     "description": "Powerful and flexible interface for working with databases in ForgeScript, integrating LMDB support for reliable data storage",
-    "version": "1.3.0",
+    "version": "1.3.1",
     "main": "src/main.js",
     "author": "Mlad (https://github.com/eolthar)",
     "repository": "https://github.com/quoriel/db",
