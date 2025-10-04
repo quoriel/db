@@ -1,5 +1,8 @@
 {
-    "separator": "~",
+    "separators": {
+        "entity": "~",
+        "variable": "→"
+    },
     "flags": {
         "noReadAhead": true,
         "noMemInit": true,

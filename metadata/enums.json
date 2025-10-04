@@ -1,1 +1,1 @@
-{"SortType":["asc","desc"],"InternalType":["config","variables"]}
+{"sortType":["asc","desc"],"valueType":["string","number","boolean","object","array"]}
