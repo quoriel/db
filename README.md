@@ -15,7 +15,7 @@ const db = new QuorielDB({
     events: [
         "dbConnect",
         "recordUpdate",
-        "recordDelete"
+        "recordRemove"
     ]
 });
 
