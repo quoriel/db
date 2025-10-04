@@ -41,5 +41,5 @@ The **config.json** file is located in the **quoriel/db** folder of your bot.
   - **type** - the type for automatic entity identifier detection (`user`, `member`, `guild`, `channel`, `role`, `message`). If set to `null`, the entity identifier must be provided explicitly.
   - **guild** - `true` or `false`. Determines whether to bind the data to a guild (for example, for `member`, `channel`, `role`, `message`).
 
-## Default values
+## Variables
 The **variables.json** file in the **quoriel/db** folder is intended for storing default variables. Initially, the file is empty - the user sets the required variables and their values themselves.
