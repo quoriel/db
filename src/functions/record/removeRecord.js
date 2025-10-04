@@ -42,7 +42,7 @@ exports.default = new NativeFunction({
             if (config.eventDelete) {
                 const value = db.get(entity);
                 await db.remove(entity);
-                config.emitter.emit("recordDelete", {
+                config.emitter.emit("recordRemove", {
                     type,
                     key: entity,
                     value
