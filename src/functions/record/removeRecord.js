@@ -39,7 +39,7 @@ exports.default = new NativeFunction({
         }
         if (view.guild) entity = entity + config.entitySeparator + (guild?.id || ctx.guild.id);
         try {
-            if (config.eventDelete) {
+            if (config.eventRemove) {
                 const value = db.get(entity);
                 await db.remove(entity);
                 config.emitter.emit("recordRemove", {

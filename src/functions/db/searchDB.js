@@ -54,10 +54,10 @@ exports.default = new NativeFunction({
         const results = [];
         const databases = !!type ? [[type, dbs.get(type)]] : Array.from(dbs.entries());
         for (const [tupe, db] of databases) {
-            const isGuild = types.get(tupe).guild;
-            if (!!guild && !isGuild) continue;
+            const is = types.get(tupe).guild;
+            if (!!guild && !is) continue;
             for (const { key, value } of db.getRange()) {
-                if (isGuild) {
+                if (is) {
                     const [entityID, guildID] = key.split(config.entitySeparator);
                     if (!!entity && entityID !== entity) continue;
                     if (!!guild && guildID !== (guild?.id || ctx.guild.id)) continue;

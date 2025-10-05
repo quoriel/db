@@ -10,7 +10,7 @@ const types = new Map();
 const flags = {};
 const config = {
     eventUpdate: false,
-    eventDelete: false,
+    eventRemove: false,
     entitySeparator: "~",
     variableSeparator: "→",
     emitter: null
@@ -20,7 +20,7 @@ async function initializer(heavens, sails) {
     await reload();
     config.emitter = heavens;
     config.eventUpdate = sails?.includes("recordUpdate") || false;
-    config.eventDelete = sails?.includes("recordDelete") || false;
+    config.eventRemove = sails?.includes("recordRemove") || false;
     config.emitter.emit("dbConnect");
 }
 
