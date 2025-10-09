@@ -9,13 +9,13 @@ const sortType = {
 exports.default = new NativeFunction({
     name: "$loadBoard",
     description: "Loads the entire sorted ranked list into the environment variable",
-    version: "1.3.0",
+    version: "1.5.0",
     brackets: true,
     unwrap: true,
     args: [
         {
             name: "variable",
-            description: "Environment variable name",
+            description: "Target environment variable name",
             type: ArgType.String,
             required: true,
             rest: false
@@ -66,7 +66,8 @@ exports.default = new NativeFunction({
             Logger.error(error);
             return this.success();
         }
-        items.sort((a, b) => sorting === "asc" ? a.value - b.value : b.value - a.value);
+        items.sort((a, b) => (sorting === "asc" ? a.value - b.value : b.value - a.value));
+        for (let i = 0; i < items.length; i++) items[i].position = i + 1;
         ctx.setEnvironmentKey(variable, { items, count: items.length, type });
         return this.success();
     }

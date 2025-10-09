@@ -63,18 +63,20 @@ function populate(map, object, prefix = "") {
     let has = false;
     for (const [key, value] of Object.entries(object)) {
         has = true;
-        const full = prefix ? `${prefix}${variableSeparator}${key}` : key;
+        const full = prefix ? `${prefix}${config.variableSeparator}${key}` : key;
         if (Array.isArray(value)) {
             map.set(full, value);
             value.forEach((item, index) => {
-                const itemKey = `${full}${variableSeparator}${index}`;
+                const itemKey = `${full}${config.variableSeparator}${index}`;
                 if (item !== null && typeof item === "object" && !Array.isArray(item)) {
+                    map.set(itemKey, item);
                     populate(map, item, itemKey);
                 } else if (item !== "") {
                     map.set(itemKey, item);
                 }
             });
         } else if (value !== null && typeof value === "object") {
+            map.set(full, value);
             populate(map, value, full);
         } else if (value !== "") {
             map.set(full, value);
