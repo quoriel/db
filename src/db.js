@@ -35,20 +35,19 @@ async function rewrite(name, content) {
     const full = join(path, name);
     await writeFile(full, content, { flag: "wx", encoding: "utf8" }).catch(() => {});
     try {
-        const data = await readFile(full, "utf8");
-        const parsed = JSON.parse(data);
+        const parsed = JSON.parse(await readFile(full, "utf8"));
         if (name === "config.json") {
             if (parsed.separators) {
                 config.entitySeparator = parsed.separators.entity || "~";
                 config.variableSeparator = parsed.separators.variable || "→";
             }
             if (parsed.flags) {
-                Object.keys(flags).forEach(key => delete flags[key]);
+                for (const key in flags) delete flags[key];
                 Object.assign(flags, parsed.flags);
             }
             if (parsed.types) {
                 types.clear();
-                for (const [key, value] of Object.entries(parsed.types)) types.set(key, value);
+                for (const key in parsed.types) types.set(key, parsed.types[key]);
             }
         } else {
             variables.clear();

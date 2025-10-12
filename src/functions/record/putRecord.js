@@ -4,7 +4,7 @@ const { dbs, types, config } = require("../../db");
 exports.default = new NativeFunction({
     name: "$putRecord",
     description: "Sets new data for the entity",
-    version: "1.4.0",
+    version: "1.6.0",
     output: ArgType.Boolean,
     brackets: true,
     unwrap: true,
@@ -46,19 +46,33 @@ exports.default = new NativeFunction({
         }
         if (view.guild) entity = entity + config.entitySeparator + (guild?.id || ctx.guild.id);
         try {
-            if (config.eventUpdate) {
-                const old = db.get(entity) || {};
-                await db.put(entity, object);
-                config.emitter.emit("recordUpdate", {
-                    type,
-                    key: entity,
-                    value: {
-                        old,
-                        new: object
-                    }
-                });
+            if (Object.keys(object).length) {
+                if (config.eventUpdate) {
+                    const old = db.get(entity);
+                    await db.put(entity, object);
+                    config.emitter.emit("recordUpdate", {
+                        type,
+                        key: entity,
+                        value: {
+                            old,
+                            new: object
+                        }
+                    });
+                } else {
+                    await db.put(entity, object);
+                }
             } else {
-                await db.put(entity, object);
+                if (config.eventRemove) {
+                    const value = db.get(entity);
+                    await db.remove(entity);
+                    config.emitter.emit("recordRemove", {
+                        type,
+                        key: entity,
+                        value
+                    });
+                } else {
+                    await db.remove(entity);
+                }
             }
             return this.success(true);
         } catch (error) {

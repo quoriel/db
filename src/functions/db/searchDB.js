@@ -12,7 +12,7 @@ const valueType = {
 exports.default = new NativeFunction({
     name: "$searchDB",
     description: "Searches the database with various filters",
-    version: "1.4.0",
+    version: "1.6.0",
     output: ArgType.Json,
     brackets: false,
     unwrap: true,
@@ -50,36 +50,42 @@ exports.default = new NativeFunction({
         }
     ],
     execute(ctx, [type, name, valus, entity, guild]) {
-        if (!!type && !dbs.has(type)) return this.successJSON([]);
+        if (type && !dbs.has(type)) return this.successJSON([]);
         const results = [];
-        const databases = !!type ? [[type, dbs.get(type)]] : Array.from(dbs.entries());
-        for (const [tupe, db] of databases) {
+        const databases = type ? [[type, dbs.get(type)]] : Array.from(dbs.entries());
+        const guildID = guild?.id || ctx.guild?.id;
+        for (let i = 0; i < databases.length; i++) {
+            const tupe = databases[i][0];
+            const db = databases[i][1];
             const is = types.get(tupe).guild;
-            if (!!guild && !is) continue;
-            for (const { key, value } of db.getRange()) {
+            if (guild && !is) continue;
+            for (const item of db.getRange()) {
+                const key = item.key;
+                const value = item.value;
                 if (is) {
-                    const [entityID, guildID] = key.split(config.entitySeparator);
-                    if (!!entity && entityID !== entity) continue;
-                    if (!!guild && guildID !== (guild?.id || ctx.guild.id)) continue;
+                    const parts = key.split(config.entitySeparator);
+                    if (entity && parts[0] !== entity) continue;
+                    if (guild && parts[1] !== guildID) continue;
                 } else {
-                    if (!!entity && key !== entity) continue;
+                    if (entity && key !== entity) continue;
                 }
                 let filtered = value;
-                if (!!name || !!valus) {
+                if (name || valus) {
                     filtered = {};
-                    for (const [varName, varValue] of Object.entries(value)) {
-                        if (!!name && varName !== name) continue;
-                        if (!!valus) {
-                            let actual = Array.isArray(varValue) ? "array" : typeof varValue;
+                    const keys = Object.keys(value);
+                    for (let k = 0; k < keys.length; k++) {
+                        const vname = keys[k];
+                        const vvalue = value[vname];
+                        if (name && vname !== name) continue;
+                        if (valus) {
+                            let actual = Array.isArray(vvalue) ? "array" : typeof vvalue;
                             if (actual === "string") {
-                                const trimmed = varValue.trim();
-                                if (trimmed && !isNaN(trimmed)) {
-                                    actual = "number";
-                                }
+                                const trimmed = vvalue.trim();
+                                if (trimmed && !isNaN(trimmed)) actual = "number";
                             }
                             if (actual !== valus) continue;
                         }
-                        filtered[varName] = varValue;
+                        filtered[vname] = vvalue;
                     }
                     if (Object.keys(filtered).length === 0) continue;
                 }
