@@ -12,7 +12,7 @@ const valueType = {
 exports.default = new NativeFunction({
     name: "$searchDB",
     description: "Searches the database with various filters",
-    version: "1.6.0",
+    version: "1.7.0",
     output: ArgType.Json,
     brackets: false,
     unwrap: true,
@@ -63,9 +63,9 @@ exports.default = new NativeFunction({
                 const key = item.key;
                 const value = item.value;
                 if (is) {
-                    const parts = key.split(config.entitySeparator);
-                    if (entity && parts[0] !== entity) continue;
-                    if (guild && parts[1] !== guildID) continue;
+                    const parts = key.indexOf(config.entitySeparator);
+                    if (entity && key.substring(0, parts) !== entity) continue;
+                    if (guild && key.substring(parts + 1) !== guildID) continue;
                 } else {
                     if (entity && key !== entity) continue;
                 }
