@@ -9,7 +9,7 @@ const sortType = {
 exports.default = new NativeFunction({
     name: "$leaderBoard",
     description: "Loads the entire sorted ranked list into the environment variable",
-    version: "1.7.0",
+    version: "1.7.1",
     brackets: true,
     unwrap: true,
     args: [
@@ -60,7 +60,7 @@ exports.default = new NativeFunction({
                 if (is && item.key.substring(parts + 1) !== id) continue;
                 const numeric = Number(item.value[name]);
                 if (isNaN(numeric)) continue;
-                items.push({ key: item.key.substring(0, parts), value: numeric });
+                items.push({ key: is ? item.key.substring(0, parts) : item.key, value: numeric });
             }
         } catch (error) {
             Logger.error(error);
