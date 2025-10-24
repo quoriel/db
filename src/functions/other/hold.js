@@ -4,7 +4,7 @@ const { dbs, types, config } = require("../../db");
 exports.default = new NativeFunction({
     name: "$hold",
     description: "Applies a hold timer to prevent repeated actions",
-    version: "1.7.0",
+    version: "1.7.2",
     brackets: true,
     unwrap: true,
     args: [
@@ -63,7 +63,9 @@ exports.default = new NativeFunction({
             const existing = data.holds[name];
             if (existing && existing > Date.now()) {
                 if (code) {
-                    ctx.container.content = code;
+                    const content = await this.resolveCode(ctx, code);
+                    if (!this.isValidReturnType(content)) return content;
+                    ctx.container.content = content.value;
                     await ctx.container.send(ctx.obj);
                 }
                 return this.stop();
