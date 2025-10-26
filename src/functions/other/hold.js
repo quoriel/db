@@ -33,7 +33,7 @@ exports.default = new NativeFunction({
             name: "code",
             description: "Code to execute",
             type: ArgType.String,
-            required: false
+            rest: false
         },
         {
             name: "entity",
