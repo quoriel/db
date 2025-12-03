@@ -164,10 +164,10 @@ Sets a delay on the record field for the specified time in milliseconds and retu
 
 ## Other
 ### `migrationDatabases(options?: object): Promise<void>`
-Migrates databases with new flags [View documentation](docs/MIGRATION.md)
+Migrates databases with new flags [View documentation](MIGRATION.md)
 
 ### `transferDatabase(client: ForgeClient, rewrite?: boolean): Promise<void>`
-Transfers data from ForgeDB to QuorielDB. The `rewrite` parameter determines whether existing fields are overwritten [View documentation](docs/TRANSFER.md)
+Transfers data from ForgeDB to QuorielDB. The `rewrite` parameter determines whether existing fields are overwritten [View documentation](TRANSFER.md)
 
 ### `makeKey(ctx: object, type: string, entity?: string, guild?: string): string`
 Constructs the record key based on context. Automatically extracts the entity ID from the context if not provided.
@@ -176,4 +176,5 @@ Constructs the record key based on context. Automatically extracts the entity ID
 Automatically constructs the record key from context based on type configuration.
 
 ### `formatKey(type: string, entity: string, guild?: string): string`
+
 Formats the record key based on type and guild (for guild types).
