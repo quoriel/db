@@ -1,11 +1,10 @@
-const { NativeFunction, ArgType, Logger } = require("@tryforge/forgescript");
-const { dbs } = require("../../db");
+const { NativeFunction, ArgType } = require("@tryforge/forgescript");
+const { prefetchDB } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$prefetchDB",
     description: "Prefetches database entries into memory to speed up future access",
-    version: "1.2.0",
-    output: ArgType.Boolean,
+    version: "2.0.0",
     brackets: true,
     unwrap: true,
     args: [
@@ -17,22 +16,15 @@ exports.default = new NativeFunction({
             rest: false
         },
         {
-            name: "ids",
-            description: "Entity IDs to prefetch",
+            name: "keys",
+            description: "Record keys",
             type: ArgType.String,
             required: true,
             rest: true
         }
     ],
-    async execute(ctx, [type, ids]) {
-        const db = dbs.get(type);
-        if (!db) return this.success(false);
-        try {
-            await db.prefetch(ids);
-            return this.success(true);
-        } catch (error) {
-            Logger.error(error);
-            return this.success(false);
-        }
+    async execute(ctx, [type, keys]) {
+        await prefetchDB(type, keys);
+        return this.success();
     }
 });

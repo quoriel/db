@@ -1,11 +1,11 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
-const { autoKey, valueRecord } = require("../../db");
+const { makeKey } = require("../../db");
 
 exports.default = new NativeFunction({
-    name: "$valueRecord",
-    description: "Gets a variable value from a record",
+    name: "$key",
+    description: "Builds a composite key",
     version: "2.0.0",
-    output: ArgType.Unknown,
+    output: ArgType.String,
     brackets: true,
     unwrap: true,
     args: [
@@ -17,20 +17,19 @@ exports.default = new NativeFunction({
             rest: false
         },
         {
-            name: "name",
-            description: "Variable name",
+            name: "entity",
+            description: "Entity identifier",
             type: ArgType.String,
-            required: true,
             rest: false
         },
         {
-            name: "key",
-            description: "Record key",
-            type: ArgType.String,
+            name: "guild",
+            description: "Guild identifier",
+            type: ArgType.Guild,
             rest: false
         }
     ],
-    execute(ctx, [type, name, key]) {
-        return this.successJSON(valueRecord(type, key || autoKey(ctx, type), name));
+    async execute(ctx, [type, entity, guild]) {
+        return this.success(makeKey(ctx, type, entity, guild?.id));
     }
 });

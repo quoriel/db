@@ -1,10 +1,10 @@
 const { NativeFunction, ArgType, Logger } = require("@tryforge/forgescript");
-const { dbs } = require("../../db");
+const { rangeDB } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$rangeDB",
     description: "Retrieves all records from the database",
-    version: "1.7.0",
+    version: "2.0.0",
     output: ArgType.Json,
     brackets: true,
     unwrap: true,
@@ -18,15 +18,6 @@ exports.default = new NativeFunction({
         }
     ],
     execute(ctx, [type]) {
-        const db = dbs.get(type);
-        if (!db) return this.successJSON([]);
-        const results = [];
-        try {
-            for (const item of db.getRange()) results.push({ key: item.key, value: item.value });
-            return this.successJSON(results);
-        } catch (error) {
-            Logger.error(error);
-            return this.successJSON([]);
-        }
+        return this.successJSON(rangeDB(type));
     }
 });

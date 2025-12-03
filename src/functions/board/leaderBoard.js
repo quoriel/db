@@ -1,5 +1,5 @@
-const { NativeFunction, ArgType, Logger } = require("@tryforge/forgescript");
-const { dbs, types, config } = require("../../db");
+const { NativeFunction, ArgType } = require("@tryforge/forgescript");
+const { leaderBoard } = require("../../db");
 
 const sortType = {
     asc: "asc",
@@ -9,13 +9,13 @@ const sortType = {
 exports.default = new NativeFunction({
     name: "$leaderBoard",
     description: "Loads the entire sorted ranked list into the environment variable",
-    version: "1.7.1",
+    version: "2.0.0",
     brackets: true,
     unwrap: true,
     args: [
         {
             name: "variable",
-            description: "Target environment variable name",
+            description: "Environment variable name",
             type: ArgType.String,
             required: true,
             rest: false
@@ -49,26 +49,7 @@ exports.default = new NativeFunction({
         }
     ],
     execute(ctx, [variable, type, name, sorting, guild]) {
-        const db = dbs.get(type);
-        if (!db) return this.success();
-        const is = types.get(type).guild;
-        const id = guild?.id || ctx.guild.id;
-        const items = [];
-        try {
-            for (const item of db.getRange()) {
-                const parts = item.key.indexOf(config.entitySeparator);
-                if (is && item.key.substring(parts + 1) !== id) continue;
-                const numeric = Number(item.value[name]);
-                if (isNaN(numeric)) continue;
-                items.push({ key: is ? item.key.substring(0, parts) : item.key, value: numeric });
-            }
-        } catch (error) {
-            Logger.error(error);
-            return this.success();
-        }
-        items.sort((a, b) => (sorting === "asc" ? a.value - b.value : b.value - a.value));
-        for (let i = 0; i < items.length; i++) items[i].position = i + 1;
-        ctx.setEnvironmentKey(variable, { items, count: items.length, type });
+        ctx.setEnvironmentKey(variable, leaderBoard(type, name, sorting, guild?.id || ctx.guild.id));
         return this.success();
     }
 });

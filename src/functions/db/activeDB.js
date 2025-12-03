@@ -1,13 +1,13 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
-const { dbs } = require("../../db");
+const { activeDB } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$activeDB",
     description: "Returns a list of active databases",
-    version: "1.3.0",
+    version: "2.0.0",
     output: ArgType.Json,
     unwrap: false,
     execute(ctx) {
-        return this.successJSON(Array.from(dbs.keys()));
+        return this.successJSON(activeDB());
     }
 });

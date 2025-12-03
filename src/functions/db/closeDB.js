@@ -1,11 +1,10 @@
-const { NativeFunction, ArgType, Logger } = require("@tryforge/forgescript");
-const { dbs } = require("../../db");
+const { NativeFunction, ArgType } = require("@tryforge/forgescript");
+const { closeDB } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$closeDB",
     description: "Closes the connection to one or more databases",
-    version: "1.3.0",
-    output: ArgType.Number,
+    version: "2.0.0",
     brackets: true,
     unwrap: true,
     args: [
@@ -18,21 +17,7 @@ exports.default = new NativeFunction({
         }
     ],
     async execute(ctx, [array]) {
-        let count = 0;
-        for (const type of array) {
-            const db = dbs.get(type);
-            if (!db) {
-                count++;
-                continue;
-            }
-            try {
-                await db.close();
-                dbs.delete(type);
-                count++;
-            } catch (error) {
-                Logger.error(error);
-            }
-        }
-        return this.success(count);
+        await closeDB(array);
+        return this.success();
     }
 });

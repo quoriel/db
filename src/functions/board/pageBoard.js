@@ -3,7 +3,7 @@ const { NativeFunction, ArgType } = require("@tryforge/forgescript");
 exports.default = new NativeFunction({
     name: "$pageBoard",
     description: "Loads a paginated leaderboard slice into the environment variable",
-    version: "1.6.0",
+    version: "2.0.0",
     brackets: true,
     unwrap: true,
     args: [
@@ -58,12 +58,12 @@ exports.default = new NativeFunction({
             },
             disabled: total > 0 ? {
                 first: page <= 2,
-                previous: page <= 1,
+                prev: page <= 1,
                 next: page >= total,
                 last: page >= total - 1
             } : {
                 first: true,
-                previous: true,
+                prev: true,
                 next: true,
                 last: true
             }

@@ -1,13 +1,13 @@
 const { NativeFunction } = require("@tryforge/forgescript");
-const { reload } = require("../../db");
+const { reloadDB } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$reloadDB",
     description: "Reloads database configuration and variables from files",
-    version: "1.4.0",
+    version: "2.0.0",
     unwrap: false,
     async execute(ctx) {
-        await reload();
+        await reloadDB();
         return this.success();
     }
 });

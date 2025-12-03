@@ -1,7 +1,5 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
-const { promises: { rm } } = require("fs");
-const { path } = require("../../db");
-const { join } = require("path");
+const { removeBackup } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$removeBackup",
@@ -19,7 +17,7 @@ exports.default = new NativeFunction({
         }
     ],
     async execute(ctx, [type]) {
-        await rm(join(path, "backups", type), { recursive: true, force: true });
+        await removeBackup(type);
         return this.success();
     }
 });

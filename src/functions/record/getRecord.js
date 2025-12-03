@@ -1,11 +1,11 @@
-const { NativeFunction, ArgType, Logger } = require("@tryforge/forgescript");
-const { dbs, types, config } = require("../../db");
+const { NativeFunction, ArgType } = require("@tryforge/forgescript");
+const { autoKey, getRecord } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$getRecord",
-    description: "Gets all data associated with the entity record",
-    version: "1.4.0",
-    output: ArgType.Json,
+    description: "Retrieves or loads record data into environment",
+    version: "2.0.0",
+    output: ArgType.Unknown,
     brackets: true,
     unwrap: true,
     args: [
@@ -17,32 +17,24 @@ exports.default = new NativeFunction({
             rest: false
         },
         {
-            name: "entity",
-            description: "Entity identifier",
+            name: "variable",
+            description: "Environment variable name",
             type: ArgType.String,
             rest: false
         },
         {
-            name: "guild",
-            description: "Guild identifier",
-            type: ArgType.Guild,
+            name: "key",
+            description: "Record key",
+            type: ArgType.String,
             rest: false
         }
     ],
-    async execute(ctx, [type, entity, guild]) {
-        const db = dbs.get(type);
-        if (!db) return this.successJSON({});
-        const view = types.get(type);
-        if (!entity) {
-            if (view.type === null) return this.successJSON({});
-            entity = ctx[view.type]?.id;
+    async execute(ctx, [type, variable, key]) {
+        const value = getRecord(type, key || autoKey(ctx, type));
+        if (variable) {
+            ctx.setEnvironmentKey(variable, value);
+            return this.success();
         }
-        if (view.guild) entity = entity + config.entitySeparator + (guild?.id || ctx.guild.id);
-        try {
-            return this.successJSON(db.get(entity) || {});
-        } catch (error) {
-            Logger.error(error);
-            return this.successJSON({});
-        }
+        return this.successJSON(value);
     }
 });

@@ -1,23 +1,23 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
-const { pingDB } = require("../../db");
+const { cache } = require("../../db");
 
 exports.default = new NativeFunction({
-    name: "$pingDB",
-    description: "Checks the database response time",
+    name: "$hasCache",
+    description: "Checks if a cache key exists",
     version: "2.0.0",
-    output: ArgType.Number,
+    output: ArgType.Boolean,
     brackets: true,
     unwrap: true,
     args: [
         {
-            name: "type",
-            description: "Data type",
+            name: "name",
+            description: "Variable name",
             type: ArgType.String,
             required: true,
             rest: false
         }
     ],
-    execute(ctx, [type]) {
-        return this.success(pingDB(type));
+    execute(ctx, [name]) {
+        return this.success(cache.has(name));
     }
 });

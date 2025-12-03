@@ -1,10 +1,10 @@
-const { NativeFunction, ArgType, Logger } = require("@tryforge/forgescript");
-const { dbs, types, config } = require("../../db");
+const { NativeFunction, ArgType } = require("@tryforge/forgescript");
+const { autoKey, hold } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$hold",
     description: "Applies a hold timer to prevent repeated actions",
-    version: "1.7.3",
+    version: "2.0.0",
     brackets: true,
     unwrap: false,
     args: [
@@ -36,15 +36,9 @@ exports.default = new NativeFunction({
             rest: false
         },
         {
-            name: "entity",
-            description: "Entity identifier",
+            name: "key",
+            description: "Record key",
             type: ArgType.String,
-            rest: false
-        },
-        {
-            name: "guild",
-            description: "Guild identifier",
-            type: ArgType.Guild,
             rest: false
         }
     ],
@@ -55,52 +49,18 @@ exports.default = new NativeFunction({
         if (!this["isValidReturnType"](name)) return name;
         const duration = await this["resolveUnhandledArg"](ctx, 2);
         if (!this["isValidReturnType"](duration)) return duration;
-        const entityV = await this["resolveUnhandledArg"](ctx, 4);
-        if (!this["isValidReturnType"](entityV)) return entityV;
-        const db = dbs.get(type.value);
-        if (!db) return this.success();
-        const view = types.get(type.value);
-        let entity = entityV?.value;
-        if (!entity) {
-            if (view.type === null) return this.success();
-            entity = ctx[view.type]?.id;
-        }
-        if (view.guild) {
-            const guild = await this["resolveUnhandledArg"](ctx, 5);
-            if (!this["isValidReturnType"](guild)) return guild;
-            entity = entity + config.entitySeparator + (guild?.value?.id || ctx.guild.id);
-        }
-        try {
-            let data = db.get(entity) || {};
-            if (!data.holds) data.holds = {};
-            const existing = data.holds[name.value];
-            const now = Date.now();
-            if (existing && existing > now) {
-                const field = this.data.fields[3];
-                if (field) {
-                    const code = await this["resolveCode"](ctx, field);
-                    if (!this["isValidReturnType"](code)) return code;
-                    ctx.container.content = code.value;
-                    await ctx.container.send(ctx.obj);
-                }
-                return this.stop();
+        const key = await this["resolveUnhandledArg"](ctx, 4);
+        if (!this["isValidReturnType"](key)) return key;
+        if (!(await hold(type.value, key.value || autoKey(ctx, type.value), name.value, duration.value))) {
+            const field = this.data.fields[3];
+            if (field) {
+                const code = await this["resolveCode"](ctx, field);
+                if (!this["isValidReturnType"](code)) return code;
+                ctx.container.content = code.value;
+                await ctx.container.send(ctx.obj);
             }
-            data.holds[name.value] = now + duration.value;
-            if (config.eventUpdate) {
-                const old = db.get(entity);
-                await db.put(entity, data);
-                config.emitter.emit("recordUpdate", {
-                    type: type.value,
-                    key: entity,
-                    value: { old, new: data }
-                });
-            } else {
-                await db.put(entity, data);
-            }
-            return this.success();
-        } catch (error) {
-            Logger.error(error);
-            return this.success();
+            return this.stop();
         }
+        return this.success();
     }
 });
