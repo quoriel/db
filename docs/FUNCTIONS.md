@@ -176,5 +176,4 @@ Constructs the record key based on context. Automatically extracts the entity ID
 Automatically constructs the record key from context based on type configuration.
 
 ### `formatKey(type: string, entity: string, guild?: string): string`
-
 Formats the record key based on type and guild (for guild types).

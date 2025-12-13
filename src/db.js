@@ -5,7 +5,6 @@ const { resolve, join } = require("path");
 const { open } = require("lmdb");
 
 const path = resolve(process.cwd(), "quoriel", "db");
-const cache = new Map();
 const dbs = new Map();
 const variables = new Map();
 const types = new Map();
@@ -384,15 +383,7 @@ async function transferDatabase(client, rewrite = false) {
     Logger.info("[QuorielDB] The data transfer code has been started.");
     for (const item of items) {
         if (item.type !== "old") {
-            const type = {
-                custom: "global",
-                user: "user",
-                member: "member",
-                guild: "guild",
-                channel: "channel",
-                role: "role",
-                message: "message"
-            }[item.type];
+            const type = item.type.replace("custom", "global");
             if (!dbs.has(type)) {
                 openDB([type]);
                 await wait(3000);
@@ -463,7 +454,6 @@ module.exports = {
     init,
     qev,
     hold,
-    cache,
 
     makeKey,
     formatKey,

@@ -12,7 +12,7 @@ This function allows you to safely transfer data from **ForgeDB** to **QuorielDB
 ## Function parameters
 - **client** - An instance of `ForgeClient` with initialized **ForgeDB** and **QuorielDB** extensions.
 - **rewrite** - Controls overwriting of existing data:
-  - `false` (default) - Adds new values while preserving existing ones.
+  - `false` - (default) - Adds new values while preserving existing ones.
   - `true` - Overwrites old values with new ones from **ForgeDB**.
 
 ## Usage
