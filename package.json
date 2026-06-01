@@ -13,7 +13,7 @@
         "src/"
     ],
     "dependencies": {
-        "@eolthar/events": "^1.0.1",
+        "@eolthar/events": "^2.0.0",
         "@tryforge/forgescript": "^2.5.0",
         "lmdb": "^3.4.4"
     }
