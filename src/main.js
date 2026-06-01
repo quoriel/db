@@ -1,7 +1,7 @@
 const { ForgeExtension, EventManager } = require("@tryforge/forgescript");
 const { description, version } = require("../package.json");
 const { CommandManager } = require("./managers/commandManager");
-const { createEmitter } = require("@eolthar/events");
+const { Emitter } = require("@eolthar/events");
 
 const db = require("./db");
 const { init, qev, ...functions } = db;
@@ -10,7 +10,7 @@ class QuorielDB extends ForgeExtension {
     name = "QuorielDB";
     description = description;
     version = version;
-    emitter = createEmitter();
+    emitter = new Emitter();
     commands;
 
     constructor(options) {
