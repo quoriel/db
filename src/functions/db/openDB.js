@@ -4,7 +4,7 @@ const { openDB } = require("../../db");
 exports.default = new NativeFunction({
     name: "$openDB",
     description: "Opens a connection to one or more databases",
-    version: "2.0.0",
+    version: "3.0.0",
     brackets: true,
     unwrap: true,
     args: [
