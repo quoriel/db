@@ -4,7 +4,7 @@ const { autoKey, hold } = require("../../db");
 exports.default = new NativeFunction({
     name: "$hold",
     description: "Applies a hold timer to prevent repeated actions",
-    version: "2.0.0",
+    version: "2.2.0",
     brackets: true,
     unwrap: false,
     args: [

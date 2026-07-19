@@ -4,7 +4,7 @@ const { CommandManager } = require("./managers/commandManager");
 const { Emitter } = require("@eolthar/events");
 
 const db = require("./db");
-const { init, qev, ...functions } = db;
+const { initDB, setupEvents, ...functions } = db;
 
 class QuorielDB extends ForgeExtension {
     name = "QuorielDB";
@@ -22,10 +22,11 @@ class QuorielDB extends ForgeExtension {
         this.commands = new CommandManager(client);
         this.load(__dirname + "/functions");
         EventManager.load("QuorielDBEvents", __dirname + "/events");
+        await initDB(this.options?.path);
         if (this.options?.events?.length) {
             client.events.load("QuorielDBEvents", this.options.events);
+            setupEvents(this.emitter, this.options.events);
         }
-        await init(this.emitter, this.options?.events);
     }
 }
 

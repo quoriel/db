@@ -140,6 +140,9 @@ Preloads the specified keys into memory to speed up subsequent record operations
 ### `getRecord(type: string, key: string): object`
 Gets a copy of the data by key. Returns an empty object if the record is not found.
 
+### `readRecord(db: object, type: string, key: string): object`
+Low-level counterpart to `getRecord`. Gets a copy of the data directly using an already-resolved database instance (`db`), bypassing the `type` → `db` lookup. Returns an empty object if the record is not found.
+
 ### `valueRecord(type: string, key: string, name: string): any`
 Gets the value of a specific field from a record. Returns the default value if the field is not found.
 
@@ -149,11 +152,17 @@ Checks if a record exists by key.
 ### `removeRecord(type: string, key: string): Promise<void>`
 Deletes a record by key. Triggers the `recordRemove` event if enabled.
 
+### `deleteRecord(db: object, type: string, key: string): Promise<void>`
+Low-level counterpart to `removeRecord`. Deletes a record directly using an already-resolved database instance (`db`), bypassing the `type` → `db` lookup. Triggers the `recordRemove` event if enabled.
+
 ### `moveRecord(type: string, fromKey: string, toKey: string, deleteSource?: boolean): Promise<boolean>`
 Moves a record from one key to another. Deletes the source record by default (`deleteSource = true`). Returns `false` if the source record is not found.
 
 ### `putRecord(type: string, key: string, data: object): Promise<boolean>`
 Saves or updates a record. If `data` is an empty object, the record is deleted. Returns `false` if `data` is not an object or array. Triggers `recordUpdate`/`recordRemove` events if enabled.
+
+### `writeRecord(db: object, type: string, key: string, data: object): Promise<void>`
+Low-level counterpart to `putRecord`. Saves data directly using an already-resolved database instance (`db`), bypassing the `type` → `db` lookup. Triggers the `recordUpdate` event if enabled.
 
 ## Single
 ### `leaderBoard(type: string, name: string, sorting: "asc" | "desc", guild?: string): { items: Array<{ key: string; value: number; position: number }>; count: number }`
@@ -164,10 +173,13 @@ Sets a delay on the record field for the specified time in milliseconds and retu
 
 ## Other
 ### `migrationDatabases(options?: object): Promise<void>`
-Migrates databases with new flags [View documentation](MIGRATION.md)
+Migrates databases with new flags [View documentation](https://github.com/quoriel/db/blob/main/docs/MIGRATION.md)
 
 ### `transferDatabase(client: ForgeClient, rewrite?: boolean): Promise<void>`
-Transfers data from ForgeDB to QuorielDB. The `rewrite` parameter determines whether existing fields are overwritten [View documentation](TRANSFER.md)
+Transfers data from ForgeDB to QuorielDB. The `rewrite` parameter determines whether existing fields are overwritten [View documentation](https://github.com/quoriel/db/blob/main/docs/TRANSFER.md)
+
+### `registerDB(name: string, schema: { type: string | null; guild: boolean }, flags?: object): object | false`
+Registers a new database type for use by extensions and opens it [View documentation](https://github.com/quoriel/db/blob/main/docs/REGISTER.md)
 
 ### `makeKey(ctx: object, type: string, entity?: string, guild?: string): string`
 Constructs the record key based on context. Automatically extracts the entity ID from the context if not provided.

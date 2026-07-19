@@ -4,7 +4,7 @@ const { autoKey, putRecord } = require("../../db");
 exports.default = new NativeFunction({
     name: "$putRecord",
     description: "Sets new data for the key",
-    version: "2.0.0",
+    version: "3.0.0",
     output: ArgType.Boolean,
     brackets: true,
     unwrap: true,
@@ -17,9 +17,9 @@ exports.default = new NativeFunction({
             rest: false
         },
         {
-            name: "value",
-            description: "Object or environment variable name",
-            type: ArgType.Json,
+            name: "variable",
+            description: "Environment variable name",
+            type: ArgType.String,
             required: true,
             rest: false
         },
@@ -30,7 +30,7 @@ exports.default = new NativeFunction({
             rest: false
         }
     ],
-    async execute(ctx, [type, value, key]) {
-        return this.success(await putRecord(type, key || autoKey(ctx, type), typeof value === "string" ? ctx.getEnvironmentKey(value) : value));
+    async execute(ctx, [type, variable, key]) {
+        return this.success(await putRecord(type, key || autoKey(ctx, type), ctx.getEnvironmentKey(variable)));
     }
 });
