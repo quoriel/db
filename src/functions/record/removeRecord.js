@@ -4,7 +4,7 @@ const { autoKey, removeRecord } = require("../../db");
 exports.default = new NativeFunction({
     name: "$removeRecord",
     description: "Deletes the record of the specified key",
-    version: "2.0.0",
+    version: "3.0.0",
     brackets: true,
     unwrap: true,
     args: [
