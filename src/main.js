@@ -4,7 +4,7 @@ const { CommandManager } = require("./managers/commandManager");
 const { Emitter } = require("@eolthar/events");
 
 const db = require("./db");
-const { initDB, setupEvents, ...functions } = db;
+const { initDB, setupEvents, hold, ...functions } = db;
 
 class QuorielDB extends ForgeExtension {
     name = "QuorielDB";

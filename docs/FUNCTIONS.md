@@ -168,9 +168,6 @@ Low-level counterpart to `putRecord`. Saves data directly using an already-resol
 ### `leaderBoard(type: string, name: string, sorting: "asc" | "desc", guild?: string): { items: Array<{ key: string; value: number; position: number }>; count: number }`
 Creates a leaderboard based on a numeric field. For guild types, you can specify a guild ID for filtering.
 
-### `hold(type: string, key: string, name: string, duration: number): Promise<boolean>`
-Sets a delay on the record field for the specified time in milliseconds and returns true if it was set, otherwise false. Triggers `recordUpdate` events if enabled.
-
 ## Other
 ### `migrationDatabases(options?: object): Promise<void>`
 Migrates databases with new flags [View documentation](https://github.com/quoriel/db/blob/main/docs/MIGRATION.md)

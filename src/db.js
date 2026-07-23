@@ -97,10 +97,10 @@ async function wipeDB(array) {
     }
 }
 
-function scheduleHoldExpire(db, type, key, name, exp) {
+function scheduleHoldExpire(db, type, key, name, value) {
     setTimeout(() => {
-        if (db.get(key)?.holds?.[name] === exp) emitter.emit("holdExpire", { type, key, name, value: exp });
-    }, exp - Date.now());
+        if (db.get(key)?.holds?.[name] === value) emitter.emit("holdExpire", { type, key, name, value });
+    }, value - Date.now());
 }
 
 function openDatabase(type, flags = {}) {
@@ -114,10 +114,10 @@ function openDatabase(type, flags = {}) {
     databases.set(type, db);
     if (config.events.holdExpire) {
         for (const item of db.getRange({ snapshot: false })) {
-            const fl = item.value.holds;
-            if (!fl) continue;
-            for (const name in fl) {
-                scheduleHoldExpire(db, type, item.key, name, fl[name]);
+            const value = item.value.holds;
+            if (!value) continue;
+            for (const name in value) {
+                scheduleHoldExpire(db, type, item.key, name, value[name]);
             }
         }
     }
@@ -251,17 +251,15 @@ function autoKey(ctx, type) {
     return entity;
 }
 
-async function hold(type, key, name, duration) {
-    const db = databases.get(type);
-    const original = db.get(key);
+async function hold(type, key, data, name, duration) {
     const now = Date.now();
-    if (original?.holds?.[name] > now) return false;
-    const data = { ...original, holds: { ...original?.holds } };
-    const exp = now + duration;
-    data.holds[name] = exp;
-    await writeRecord(db, type, key, data);
-    if (config.events.holdExpire) scheduleHoldExpire(db, type, key, name, exp);
-    return true;
+    if (data?.holds?.[name] > now) return null;
+    const value = now + duration;
+    const next = { ...data, holds: { ...data?.holds, [name]: value } };
+    const db = databases.get(type);
+    await writeRecord(db, type, key, next);
+    if (config.events.holdExpire) scheduleHoldExpire(db, type, key, name, value);
+    return next;
 }
 
 function valueRecord(type, key, name) {
