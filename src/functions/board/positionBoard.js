@@ -3,7 +3,7 @@ const { NativeFunction, ArgType } = require("@tryforge/forgescript");
 exports.default = new NativeFunction({
     name: "$positionBoard",
     description: "Returns the position of the specified entity in the ranked list",
-    version: "1.5.0",
+    version: "3.0.0",
     output: ArgType.Number,
     brackets: true,
     unwrap: true,
@@ -29,7 +29,7 @@ exports.default = new NativeFunction({
             entity = ctx[json.type]?.id;
         }
         let index = -1;
-        for (let i = 0; i < json.count; i++) {
+        for (let i = 0, l = json.items.length; i < l; i++) {
             if (json.items[i].key === entity) {
                 index = i;
                 break;

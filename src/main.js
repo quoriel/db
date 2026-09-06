@@ -21,12 +21,12 @@ class QuorielDB extends ForgeExtension {
     async init(client) {
         this.commands = new CommandManager(client);
         this.load(__dirname + "/functions");
-        EventManager.load("QuorielDBEvents", __dirname + "/events");
-        await initDB(this.options?.path);
         if (this.options?.events?.length) {
+            EventManager.load("QuorielDBEvents", __dirname + "/events");
             client.events.load("QuorielDBEvents", this.options.events);
-            setupEvents(this.emitter, this.options.events);
         }
+        await initDB(this.options?.path);
+        if (this.options?.events?.length) setupEvents(this.emitter, this.options.events);
     }
 }
 

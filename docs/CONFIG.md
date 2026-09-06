@@ -1,5 +1,5 @@
 # Config
-This document describes the structure and configuration process for the `config.json` file located in your bot's `quoriel/db` directory. The file defines the separator, database flags, and supported data types.
+This document describes the structure and configuration process for the `config.json` file created in the database folder - `database` by default, or the folder passed as `path` when connecting the extension. The file defines the separator, database flags, and supported data types.
 
 ## separator
 Character used to construct compound keys. **Warning: Changing this after database creation will make existing keys unreadable.**

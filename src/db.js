@@ -4,14 +4,9 @@ const { performance } = require("perf_hooks");
 const { join } = require("path");
 const { open } = require("lmdb");
 
-let resolveDefault;
-try {
-    ({ resolveDefault } = require("@quoriel/edge"));
-} catch {
-    resolveDefault = (value) => value;
-}
-
+let resolveDefault = (value) => value;
 let emitter = null;
+
 const databases = new Map();
 const types = new Map();
 const config = {
@@ -19,6 +14,7 @@ const config = {
     separator: "~",
     flags: {},
     events: {
+        databaseConnect: false,
         recordUpdate: false,
         recordRemove: false,
         holdExpire: false
@@ -46,6 +42,12 @@ function isValidSchema(schema) {
 async function initDB(path) {
     if (path) config.path = join(process.cwd(), path);
     await reloadDB();
+    try {
+        const edge = require("@quoriel/edge");
+        if (edge.features.has("structureDefaults")) resolveDefault = edge.resolveDefault;
+    } catch {
+        // it just works ¯\_(ツ)_/¯
+    }
 }
 
 function setupEvents(secret, events) {
@@ -343,7 +345,7 @@ function leaderBoard(type, name, sorting, guild) {
     }
     items.sort((a, b) => (sorting === "asc" ? a.value - b.value : b.value - a.value));
     for (let i = 0, l = items.length; i < l; i++) items[i].position = i + 1;
-    return { type, items, count: items.length };
+    return { type: types.get(type).type, items, count: items.length };
 }
 
 async function createBackup(type) {

@@ -128,7 +128,7 @@ Returns an array of all keys in the specified database.
 Returns all records from the specified database.
 
 ### `reloadDB(): Promise<void>`
-Reloads configuration (`config.json` and `variables.json`) from files.
+Reloads `config.json` from the database folder.
 
 ### `searchDB(type?: string, name?: string, valueType?: "string" | "number" | "boolean" | "object" | "array", value?: string, entity?: string, guild?: string): Array<{ type: string; key: string; value: object }>`
 Searches for records by given criteria.
@@ -144,7 +144,7 @@ Gets a copy of the data by key. Returns an empty object if the record is not fou
 Low-level counterpart to `getRecord`. Gets a copy of the data directly using an already-resolved database instance (`db`), bypassing the `type` → `db` lookup. Returns an empty object if the record is not found.
 
 ### `valueRecord(type: string, key: string, name: string): any`
-Gets the value of a specific field from a record. Returns the default value if the field is not found.
+Gets the value of a specific field from a record. Falls back to the value declared by the structure schema when the field is missing - this requires **QuorielEdge** with the `structureDefaults` feature enabled and a loaded structures folder, otherwise the raw value is returned as is.
 
 ### `existsRecord(type: string, key: string): boolean`
 Checks if a record exists by key.
@@ -159,14 +159,16 @@ Low-level counterpart to `removeRecord`. Deletes a record directly using an alre
 Moves a record from one key to another. Deletes the source record by default (`deleteSource = true`). Returns `false` if the source record is not found.
 
 ### `putRecord(type: string, key: string, data: object): Promise<boolean>`
-Saves or updates a record. If `data` is an empty object, the record is deleted. Returns `false` if `data` is not an object or array. Triggers `recordUpdate`/`recordRemove` events if enabled.
+Saves or updates a record. If `data` is an empty object, the record is deleted. Returns `false` if `data` is not a plain object - arrays and `null` are rejected. Triggers `recordUpdate`/`recordRemove` events if enabled.
 
 ### `writeRecord(db: object, type: string, key: string, data: object): Promise<void>`
 Low-level counterpart to `putRecord`. Saves data directly using an already-resolved database instance (`db`), bypassing the `type` → `db` lookup. Triggers the `recordUpdate` event if enabled.
 
 ## Single
-### `leaderBoard(type: string, name: string, sorting: "asc" | "desc", guild?: string): { items: Array<{ key: string; value: number; position: number }>; count: number }`
-Creates a leaderboard based on a numeric field. For guild types, you can specify a guild ID for filtering.
+### `leaderBoard(type: string, name: string, sorting?: "asc" | "desc", guild?: string): { type: string | null; items: Array<{ key: string; value: number; position: number }>; count: number }`
+Creates a leaderboard based on a numeric field. For guild types, you can specify a guild ID for filtering. Anything other than `"asc"` sorts descending.
+
+The returned `type` is the entity the ranked type resolves its identifiers from (`user`, `member`, ...), or `null` when they have to be supplied explicitly - not the name of the database.
 
 ## Other
 ### `migrationDatabases(options?: object): Promise<void>`
