@@ -3,7 +3,7 @@ const { NativeFunction, ArgType } = require("@tryforge/forgescript");
 exports.default = new NativeFunction({
     name: "$pageBoard",
     description: "Loads a paginated leaderboard slice into the environment variable",
-    version: "2.0.0",
+    version: "3.0.0",
     brackets: true,
     unwrap: true,
     args: [
@@ -40,7 +40,7 @@ exports.default = new NativeFunction({
         const json = ctx.getEnvironmentKey(variable);
         const start = (page - 1) * max;
         const items = json.items.slice(start, start + max);
-        const total = Math.ceil(json.count / max);
+        const total = Math.ceil(json.items.length / max);
         ctx.setEnvironmentKey(newe, {
             items,
             count: items.length,

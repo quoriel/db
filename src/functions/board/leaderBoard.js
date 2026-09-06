@@ -9,7 +9,7 @@ const sortType = {
 exports.default = new NativeFunction({
     name: "$leaderBoard",
     description: "Loads the entire sorted ranked list into the environment variable",
-    version: "2.0.0",
+    version: "3.0.0",
     brackets: true,
     unwrap: true,
     args: [

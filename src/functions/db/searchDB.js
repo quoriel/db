@@ -12,7 +12,7 @@ const valueType = {
 exports.default = new NativeFunction({
     name: "$searchDB",
     description: "Searches the database with various filters",
-    version: "2.0.0",
+    version: "3.0.0",
     output: ArgType.Json,
     brackets: false,
     unwrap: true,
