@@ -3,8 +3,9 @@ const { autoKey, getRecord } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$getRecord",
-    description: "Saves record data into an environment variable",
-    version: "3.0.0",
+    description: "Retrieves record data or saves it into an environment variable",
+    version: "3.1.0",
+    output: ArgType.Unknown,
     brackets: true,
     unwrap: true,
     args: [
@@ -29,7 +30,9 @@ exports.default = new NativeFunction({
         }
     ],
     async execute(ctx, [type, variable, key]) {
-        ctx.setEnvironmentKey(variable, getRecord(type, key || autoKey(ctx, type)));
+        const data = getRecord(type, key || autoKey(ctx, type));
+        if (!variable) return this.successJSON(data);
+        ctx.setEnvironmentKey(variable, data);
         return this.success();
     }
 });

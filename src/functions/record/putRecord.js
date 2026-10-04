@@ -3,7 +3,7 @@ const { autoKey, putRecord } = require("../../db");
 
 exports.default = new NativeFunction({
     name: "$putRecord",
-    description: "Sets new data for the key",
+    description: "Replaces the record data for the key, or deletes the record if the object is empty",
     version: "3.0.0",
     output: ArgType.Boolean,
     brackets: true,
@@ -17,9 +17,9 @@ exports.default = new NativeFunction({
             rest: false
         },
         {
-            name: "variable",
-            description: "Environment variable name",
-            type: ArgType.String,
+            name: "value",
+            description: "Object or environment variable name",
+            type: ArgType.Json,
             required: true,
             rest: false
         },
@@ -30,7 +30,7 @@ exports.default = new NativeFunction({
             rest: false
         }
     ],
-    async execute(ctx, [type, variable, key]) {
-        return this.success(await putRecord(type, key || autoKey(ctx, type), ctx.getEnvironmentKey(variable)));
+    async execute(ctx, [type, value, key]) {
+        return this.success(await putRecord(type, key || autoKey(ctx, type), typeof value === "string" ? ctx.getEnvironmentKey(value) : value));
     }
 });
